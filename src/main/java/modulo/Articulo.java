@@ -1,18 +1,28 @@
 package modulo;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Francis Cáceres on 12/6/2016.
  */
-public class Articulo {
+
+@Entity
+@NamedQueries({@NamedQuery(name = "Articulo.findAllByName", query = "select a from Articulo a where a.titulo like :titulo")})
+public class Articulo implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String titulo;
     private String cuerpo;
+    @Transient
     private Usuario autor;
     private Date fecha;
+    @OneToMany(mappedBy = "articulo")
     private List<Comentario> listaComentario;
+    @ManyToMany //No estoy seguro
     private List<Etiqueta> listaEtiqueta;
 
     public Articulo(){

@@ -1,12 +1,21 @@
 package modulo;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Created by Francis Cáceres on 12/6/2016.
  */
-public class Comentario {
+@Entity
+public class Comentario implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private  String comentario;
+    @Transient
     private Usuario autor;
+    @Transient
+    @ManyToOne
     private Articulo articulo;
 
     public Comentario() {

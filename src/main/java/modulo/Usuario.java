@@ -1,9 +1,15 @@
 package modulo;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.Serializable;
+
 /**
  * Created by Francis Cáceres on 12/6/2016.
  */
-public class Usuario {
+@Entity
+public class Usuario implements Serializable{
+    @Id
    private String username;
    private String nombre;
    private String password;
