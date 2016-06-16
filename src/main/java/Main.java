@@ -7,6 +7,7 @@ import modulo.Articulo;
 import modulo.Comentario;
 import modulo.Etiqueta;
 import modulo.Usuario;
+import servicios.ArticuloQuerys;
 import spark.ModelAndView;
 import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -68,7 +69,7 @@ public class Main {
             attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) session.attribute("currentUser")));
 
             Boolean admin =session.attribute("admin");
-            //System.out.println(" "+ session.attribute("usuario"));
+
             attributes.put("sesion","false");
 
             if(admin!=null) {
@@ -91,7 +92,12 @@ public class Main {
                 }
             }
 
-           // attributes.put("articulos",bd.getArticulos());
+            List<Articulo> articulos = ArticuloQuerys.getInstancia().findAll();
+            /*for(Articulo a : articulos)
+            {
+                System.out.println(a.getId()+ " " + a.getTitulo()+ " " + a.getAutor());
+            }*/
+            attributes.put("articulos",articulos);
 
 
             return new ModelAndView(attributes, "home.ftl");

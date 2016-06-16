@@ -19,4 +19,9 @@ dependencies {
     compile 'org.freemarker:freemarker:2.3.23'
     compile 'com.sparkjava:spark-debug-tools:0.5'
     compile 'com.google.code.gson:gson:2.6.2'
+
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+
+
 }
