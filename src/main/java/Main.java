@@ -21,44 +21,10 @@ public class Main {
     public static void main(String [] args)
     {
         staticFileLocation("recursos");
-       // Manejador bd = new Manejador();
-        // bd.eliminarTodo();
-       // bd.subir();
+
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
-
-
-        //Administradores
-        //bd.insertarUsuario(new Usuario("er12","Ernesto Rodriguez","1234", false,true));
-        //bd.insertarUsuario(new Usuario("francis","Francis Cáceres","1234",true,true));
-
-        //Usuario francis = new Usuario("","","",false,false);
-
-        //Datos ejemplo
-   /* ArrayList<Etiqueta> LE = new ArrayList<Etiqueta>();
-    LE.add(new Etiqueta(0,"etetiguere"));
-    LE.add(new Etiqueta(0,"francis"));
-    LE.add(new Etiqueta(0,"cool"));
-
-
-    bd.insertarArticulo(new Articulo(11,"Hola soy Francis",
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, " + //Hasta "veri" son 70 caracteres
-                    "tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus " +
-                    "eum dicta id animi corrupti debitis ipsum officiis rerum.",
-            new Usuario("francis","","",
-                    false,false),null, null,LE));*/
-
-        //-------------------------------------------Comentario Prueba
-    /*ArrayList<Etiqueta> LE = new ArrayList<Etiqueta>();
-    LE.add(new Etiqueta(0,"etetiguere"));
-    LE.add(new Etiqueta(0,"francis"));
-    LE.add(new Etiqueta(0,"cool"));
-
-
-    bd.insertarArticulo(new Articulo(0,"Hola soy Francis", "BLABLABLA", new Usuario("francis","","",
-            false,false),null, null,LE));
-    */
 
 
         get("/", (request, response) -> {
@@ -93,10 +59,8 @@ public class Main {
             }
 
             List<Articulo> articulos = ArticuloQuerys.getInstancia().findAll();
-            /*for(Articulo a : articulos)
-            {
-                System.out.println(a.getId()+ " " + a.getTitulo()+ " " + a.getAutor());
-            }*/
+            Articulo.getInstancia().crear(new Articulo());
+
             attributes.put("articulos",articulos);
 
 
@@ -122,26 +86,24 @@ public class Main {
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
                     etiq.add(new Etiqueta(0, eti));
-                    // System.out.println(eti);
+
                 }
 
 
                 Articulo art = new Articulo(15, titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
-             //   bd.insertarArticulo(art);
+
             }
             else {
                 if (elimArt != null)
                 {
                     int elim = Integer.parseInt(request.queryParams("elim"));
 
-                    //System.out.println(elim);
-                //    bd.eliminarArticulo(elim);
+
 
 
                 }
 
             }
-          //  attributes.put("articulos",bd.getArticulos());
             return new ModelAndView(attributes, "home.ftl");
         }, freeMarkerEngine);
 
@@ -308,23 +270,5 @@ public class Main {
             return null;
         });
 
-
-        //
-    /*Session session=request.session(true);
-
-    Usuario usuario= null;//FakeServices.getInstancia().autenticarUsuario(request.params("usuario"), request.params("contrasena"));
-    if(request.params("usuario").equalsIgnoreCase("barcamp") && request.params("contrasena").equalsIgnoreCase("2014")){
-        usuario = new Usuario("Barcamp", "2014");
-    }
-
-    if(usuario==null){
-        halt(401,"Credenciales no validas...");
-    }
-
-    session.attribute("usuario", usuario);
-    response.redirect("/");
-
-    return "";
-*/
     }
 }
