@@ -23,7 +23,7 @@ public class Comentario implements Serializable{
     }
 
     public Comentario(int id, String comentario, Usuario autor, Articulo articulo) {
-        this.id = id;
+        //this.id = id;
         this.comentario = comentario;
         this.autor = autor;
         this.articulo = articulo;

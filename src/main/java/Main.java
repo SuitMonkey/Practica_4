@@ -20,6 +20,8 @@ public class Main {
 
     public static void main(String [] args)
     {
+        //Al correr el programa por primera vez, cambiar el update en el persistence xml por create
+
         staticFileLocation("/recursos");
 
         Configuration configuration = new Configuration();
@@ -27,7 +29,7 @@ public class Main {
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
 
         System.out.println("Yes");
-        EtiquetaQueries.getInstancia().crear(new Etiqueta(0,"first"));
+        EtiquetaQueries.getInstancia().crear(new Etiqueta(22,"second"));
         System.out.println("Yas!");
 
         get("/", (request, response) -> {

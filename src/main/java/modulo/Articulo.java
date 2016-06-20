@@ -31,7 +31,7 @@ public class Articulo implements Serializable{
     }
 
     public Articulo(long id, String titulo, String cuerpo, Usuario autor, Date fecha, List<Comentario> listaComentario, List<Etiqueta> listaEtiqueta) {
-        this.id = id;
+       // this.id = id;
         this.titulo = titulo;
         this.cuerpo = cuerpo;
         this.autor = autor;
