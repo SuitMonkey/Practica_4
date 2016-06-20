@@ -30,58 +30,6 @@ public class Main {
         EtiquetaQueries.getInstancia().crear(new Etiqueta(0,"first"));
         System.out.println("Yas!");
 
-        /*
-        ArrayList<Etiqueta> LE = new ArrayList<Etiqueta>();
-
-        LE.add();
-
-        LE.add(new Etiqueta(0,"francis"));
-        LE.add(new Etiqueta(0,"cool"));
-
-
-/*
-        Articulo articulo =new Articulo(11,"Hola soy Francis",
-                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, " + //Hasta "veri" son 70 caracteres
-                        "tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus " +
-                        "eum dicta id animi corrupti debitis ipsum officiis rerum.",
-                new Usuario("francis","","",
-                        false,false),null, null,LE);
-
-        System.out.println("yes");
-        ArticuloQueries.getInstancia().crear(articulo);
-        System.out.println("yes");
-        //Administradores
-        //bd.insertarUsuario(new Usuario("er12","Ernesto Rodriguez","1234", false,true));
-        //bd.insertarUsuario(new Usuario("francis","Francis Cáceres","1234",true,true));
-
-        //Usuario francis = new Usuario("","","",false,false);
-
-        //Datos ejemplo
-   /* ArrayList<Etiqueta> LE = new ArrayList<Etiqueta>();
-    LE.add(new Etiqueta(0,"etetiguere"));
-    LE.add(new Etiqueta(0,"francis"));
-    LE.add(new Etiqueta(0,"cool"));
-
-
-    bd.insertarArticulo(new Articulo(11,"Hola soy Francis",
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, " + //Hasta "veri" son 70 caracteres
-                    "tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus " +
-                    "eum dicta id animi corrupti debitis ipsum officiis rerum.",
-            new Usuario("francis","","",
-                    false,false),null, null,LE));*/
-
-        //-------------------------------------------Comentario Prueba
-    /*ArrayList<Etiqueta> LE = new ArrayList<Etiqueta>();
-    LE.add(new Etiqueta(0,"etetiguere"));
-    LE.add(new Etiqueta(0,"francis"));
-    LE.add(new Etiqueta(0,"cool"));
-
-
-    bd.insertarArticulo(new Articulo(0,"Hola soy Francis", "BLABLABLA", new Usuario("francis","","",
-            false,false),null, null,LE));
-    */
-
-
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
@@ -140,12 +88,12 @@ public class Main {
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
                     etiq.add(new Etiqueta(0, eti));
-                    // System.out.println(eti);
+
                 }
 
 
                 Articulo art = new Articulo(15, titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
-             //   bd.insertarArticulo(art);
+
             }
             else {
                 if (elimArt != null)
@@ -326,23 +274,5 @@ public class Main {
             return null;
         });
 
-
-        //
-    /*Session session=request.session(true);
-
-    Usuario usuario= null;//FakeServices.getInstancia().autenticarUsuario(request.params("usuario"), request.params("contrasena"));
-    if(request.params("usuario").equalsIgnoreCase("barcamp") && request.params("contrasena").equalsIgnoreCase("2014")){
-        usuario = new Usuario("Barcamp", "2014");
-    }
-
-    if(usuario==null){
-        halt(401,"Credenciales no validas...");
-    }
-
-    session.attribute("usuario", usuario);
-    response.redirect("/");
-
-    return "";
-*/
     }
 }
