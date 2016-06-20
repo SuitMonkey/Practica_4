@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 @Entity
-@NamedQueries({@NamedQuery(name = "Articulo.findAllByName", query = "select a from Articulo a where a.titulo like :titulo")})
+@NamedQueries({@NamedQuery(name = "Articulo.findAllByName", query = "SELECT a FROM Articulo a WHERE a.titulo like :titulo")})
 public class Articulo implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

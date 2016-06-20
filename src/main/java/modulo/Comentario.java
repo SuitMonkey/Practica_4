@@ -14,7 +14,7 @@ public class Comentario implements Serializable{
     private  String comentario;
     @Transient
     private Usuario autor;
-    @Transient
+//    @Transient
     @ManyToOne
     private Articulo articulo;
 

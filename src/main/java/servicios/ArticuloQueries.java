@@ -9,17 +9,17 @@ import java.util.List;
 /**
  * Created by Francis Cáceres on 15/6/2016.
  */
-public class ArticuloQuerys extends GestionDB<Articulo> {
+public class ArticuloQueries extends GestionDB<Articulo> {
 
-    private static ArticuloQuerys instancia;
+    private static ArticuloQueries instancia;
 
-    public ArticuloQuerys() {
+    public ArticuloQueries() {
         super(Articulo.class);
     }
 
-    public static ArticuloQuerys getInstancia() {
+    public static ArticuloQueries getInstancia() {
         if(instancia==null){
-            instancia = new ArticuloQuerys();
+            instancia = new ArticuloQueries();
         }
         return instancia;
     }

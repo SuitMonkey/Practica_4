@@ -4,10 +4,10 @@
 
 import freemarker.template.Configuration;
 import modulo.Articulo;
-import modulo.Comentario;
 import modulo.Etiqueta;
 import modulo.Usuario;
-import servicios.ArticuloQuerys;
+import servicios.ArticuloQueries;
+import servicios.EtiquetaQueries;
 import spark.ModelAndView;
 import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -20,15 +20,36 @@ public class Main {
 
     public static void main(String [] args)
     {
-        staticFileLocation("recursos");
-       // Manejador bd = new Manejador();
-        // bd.eliminarTodo();
-       // bd.subir();
+        staticFileLocation("/recursos");
+
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
 
+        System.out.println("Yes");
+        EtiquetaQueries.getInstancia().crear(new Etiqueta(0,"first"));
+        System.out.println("Yas!");
 
+        /*
+        ArrayList<Etiqueta> LE = new ArrayList<Etiqueta>();
+
+        LE.add();
+
+        LE.add(new Etiqueta(0,"francis"));
+        LE.add(new Etiqueta(0,"cool"));
+
+
+/*
+        Articulo articulo =new Articulo(11,"Hola soy Francis",
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, " + //Hasta "veri" son 70 caracteres
+                        "tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus " +
+                        "eum dicta id animi corrupti debitis ipsum officiis rerum.",
+                new Usuario("francis","","",
+                        false,false),null, null,LE);
+
+        System.out.println("yes");
+        ArticuloQueries.getInstancia().crear(articulo);
+        System.out.println("yes");
         //Administradores
         //bd.insertarUsuario(new Usuario("er12","Ernesto Rodriguez","1234", false,true));
         //bd.insertarUsuario(new Usuario("francis","Francis Cáceres","1234",true,true));
@@ -92,11 +113,8 @@ public class Main {
                 }
             }
 
-            List<Articulo> articulos = ArticuloQuerys.getInstancia().findAll();
-            /*for(Articulo a : articulos)
-            {
-                System.out.println(a.getId()+ " " + a.getTitulo()+ " " + a.getAutor());
-            }*/
+            List<Articulo> articulos = new ArrayList<Articulo>();//ArticuloQueries.getInstancia().findAll();
+
             attributes.put("articulos",articulos);
 
 
