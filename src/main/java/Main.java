@@ -28,10 +28,6 @@ public class Main {
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
 
-        System.out.println("Yes");
-        EtiquetaQueries.getInstancia().crear(new Etiqueta(22,"second"));
-        System.out.println("Yas!");
-
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
@@ -63,7 +59,7 @@ public class Main {
                 }
             }
 
-            List<Articulo> articulos = new ArrayList<Articulo>();//ArticuloQueries.getInstancia().findAll();
+            List<Articulo> articulos = ArticuloQueries.getInstancia().findAll();
 
             attributes.put("articulos",articulos);
 
@@ -104,8 +100,6 @@ public class Main {
 
                     //System.out.println(elim);
                 //    bd.eliminarArticulo(elim);
-
-
                 }
 
             }
