@@ -8,6 +8,7 @@ import modulo.Etiqueta;
 import modulo.Usuario;
 import servicios.ArticuloQueries;
 import servicios.EtiquetaQueries;
+import servicios.UsuarioQueries;
 import spark.ModelAndView;
 import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -24,10 +25,20 @@ public class Main {
 
         staticFileLocation("/recursos");
 
+
+      //  UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
+
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
 
+/*        List<Usuario> lista = (List<Usuario>)UsuarioQueries.getInstancia().findAll();
+        for(Usuario u : lista )
+        {
+            System.out.println("Usuario "+u.getUsername()+ " "+ u.getPassword());
+
+        }
+*/
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
@@ -87,10 +98,13 @@ public class Main {
                 for (String eti : etiquetas.split(",")) {
                     etiq.add(new Etiqueta(0, eti));
 
+
                 }
 
 
+
                 Articulo art = new Articulo(15, titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
+                ArticuloQueries.getInstancia().crear(art);
 
             }
             else {
@@ -103,7 +117,7 @@ public class Main {
                 }
 
             }
-          //  attributes.put("articulos",bd.getArticulos());
+            attributes.put("articulos",ArticuloQueries.getInstancia().findAll());
             return new ModelAndView(attributes, "home.ftl");
         }, freeMarkerEngine);
 
@@ -192,9 +206,9 @@ public class Main {
 
             if(session.attribute("sesion"))
             {
-            //    Usuario u= bd.getUsuario(request.queryParams("user"));
+                Usuario u= UsuarioQueries.getInstancia().find(request.queryParams("user"));
 
-            //    attributes.put("message","Bienvenido " + u.getNombre());
+                attributes.put("message","Bienvenido " + u.getNombre());
                 attributes.put("redireccionar", "si");
             }
             else
@@ -212,7 +226,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
 
 
-        //    attributes.put("usuarios",bd.getUsuarios());
+            attributes.put("usuarios",UsuarioQueries.getInstancia().findAll());
 
             return new ModelAndView(attributes, "administrarUsuarios.ftl");
         }, freeMarkerEngine);
@@ -223,8 +237,7 @@ public class Main {
             if(request.queryParams("elim")!=null)
             {
                 String usernam = request.queryParams("elim");
-                //System.out.println(usernam);
-            //    bd.eliminarUsuario(usernam);
+                UsuarioQueries.getInstancia().eliminar(new Usuario(usernam,"","",false, false));
             }
             else
             {
@@ -236,10 +249,10 @@ public class Main {
 
                 //System.out.println(request.queryParams("admin"));
                 Usuario usuario = new Usuario(user,nombre,pass,admin,true);
-             //   bd.insertarUsuario(usuario);
+                UsuarioQueries.getInstancia().crear(usuario);
             }
 
-        //    attributes.put("usuarios",bd.getUsuarios());
+            attributes.put("usuarios",UsuarioQueries.getInstancia().findAll());
 
             return new ModelAndView(attributes, "administrarUsuarios.ftl");
         }, freeMarkerEngine);
@@ -249,17 +262,16 @@ public class Main {
 
             String user = request.queryParams("user");
             String pass = request.queryParams("pass");
+            Usuario comprobar = UsuarioQueries.getInstancia().find(user);
 
-         //   if(bd.goodUsernamePassword(user,pass))
-         //   {
-         //       session.attribute("sesion", true);
-         //       session.attribute("currentUser", bd.getUsuario(user));
-         //   }
-         //   else
-         //       session.attribute("sesion", false);
+            if(comprobar.getPassword().equals(pass))
+            {
+                session.attribute("sesion", true);
+                session.attribute("currentUser", comprobar );
+            }
+            else
+                session.attribute("sesion", false);
             //response.redirect("/zonaadmin/");
-
-
 
         });
 
