@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 
+
 /**
  * Created by Francis Cáceres on 12/6/2016.
  */
@@ -38,6 +39,11 @@ public class Articulo implements Serializable{
         this.fecha = fecha;
         this.listaComentario = listaComentario;
         this.listaEtiqueta = listaEtiqueta;
+
+        fecha = new Date();
+        java.sql.Date fechas = new java.sql.Date(fecha.getTime());
+
+        this.setFecha(fechas);
     }
 
     public long getId() {

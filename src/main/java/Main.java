@@ -25,12 +25,8 @@ public class Main {
 
         staticFileLocation("/recursos");
 
-        List<Usuario > usuar = UsuarioQueries.getInstancia().findAll();
+     //   UsuarioQueries.getInstancia().crear(new Usuario("francis","Francis Caceres","1234",true, true));
 
-        if(usuar == null) {
-            UsuarioQueries.getInstancia().crear(new Usuario("francis","Francis Caceres","1234",true, true));
-
-        }
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
