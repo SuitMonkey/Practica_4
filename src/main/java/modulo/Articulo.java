@@ -18,12 +18,12 @@ public class Articulo implements Serializable{
     private long id;
     private String titulo;
     private String cuerpo;
-    @Transient
+    @ManyToOne
     private Usuario autor;
     private Date fecha;
     @OneToMany(mappedBy = "articulo")
     private List<Comentario> listaComentario;
-    @ManyToMany //No estoy seguro
+    @ManyToMany
     private List<Etiqueta> listaEtiqueta;
 
     public Articulo(){

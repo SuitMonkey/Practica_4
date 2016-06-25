@@ -25,9 +25,12 @@ public class Main {
 
         staticFileLocation("/recursos");
 
+        List<Usuario > usuar = UsuarioQueries.getInstancia().findAll();
 
-      //  UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
+        if(usuar == null) {
+            UsuarioQueries.getInstancia().crear(new Usuario("francis","Francis Caceres","1234",true, true));
 
+        }
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
@@ -43,7 +46,6 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
             Boolean usuario = session.attribute("sesion");
-
             attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) session.attribute("currentUser")));
 
             Boolean admin =session.attribute("admin");
@@ -96,14 +98,15 @@ public class Main {
                 String etiquetas = request.queryParams("area-etiqueta");
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
-                    etiq.add(new Etiqueta(0, eti));
-
+                   // etiq.add(new Etiqueta(0, eti));
+                    EtiquetaQueries.getInstancia().crear(new Etiqueta(0,eti));
 
                 }
 
 
 
                 Articulo art = new Articulo(15, titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
+
                 ArticuloQueries.getInstancia().crear(art);
 
             }

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by Francis Cáceres on 12/6/2016.
  */
 @Entity
-//@NamedQueries({@NamedQuery(name = "Usuario.findAllByUsername", query = "SELECT a FROM Usuario a WHERE u.username like :username")})
+@NamedQueries({@NamedQuery(name = "Usuario.findAllByUsername", query = "SELECT a FROM Usuario a WHERE a.username like :username")})
 public class Usuario implements Serializable{
     @Id
    private String username;
