@@ -22,17 +22,16 @@ public class Articulo implements Serializable{
     @ManyToOne
     private Usuario autor;
     private Date fecha;
-    @OneToMany(mappedBy = "articulo")
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
     private List<Comentario> listaComentario;
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     private List<Etiqueta> listaEtiqueta;
 
     public Articulo(){
 
     }
 
-    public Articulo(long id, String titulo, String cuerpo, Usuario autor, Date fecha, List<Comentario> listaComentario, List<Etiqueta> listaEtiqueta) {
-       // this.id = id;
+    public Articulo(String titulo, String cuerpo, Usuario autor, Date fecha, List<Comentario> listaComentario, List<Etiqueta> listaEtiqueta) {
         this.titulo = titulo;
         this.cuerpo = cuerpo;
         this.autor = autor;

@@ -13,25 +13,14 @@ import java.io.Serializable;
 @Entity
 public class Etiqueta implements Serializable{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String etiqueta;
 
     public Etiqueta(){
 
     }
 
-    public Etiqueta(int id, String etiqueta) {
-       // this.id = id;
+    public Etiqueta( String etiqueta) {
         this.etiqueta = etiqueta;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getEtiqueta() {

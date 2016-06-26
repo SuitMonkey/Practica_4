@@ -25,19 +25,18 @@ public class Main {
 
         staticFileLocation("/recursos");
 
-     //   UsuarioQueries.getInstancia().crear(new Usuario("francis","Francis Caceres","1234",true, true));
+
+
+        //if(UsuarioQueries.getInstancia().find("er12")==null)
+        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
 
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
 
-/*        List<Usuario> lista = (List<Usuario>)UsuarioQueries.getInstancia().findAll();
-        for(Usuario u : lista )
-        {
-            System.out.println("Usuario "+u.getUsername()+ " "+ u.getPassword());
+        //ArticuloQueries.getInstancia().eliminar(ArticuloQueries.getInstancia().findAll().get(0).getId());
 
-        }
-*/
+
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
@@ -95,13 +94,14 @@ public class Main {
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
                    // etiq.add(new Etiqueta(0, eti));
-                    EtiquetaQueries.getInstancia().crear(new Etiqueta(0,eti));
+                    EtiquetaQueries.getInstancia().crear(new Etiqueta(eti));
 
                 }
 
+                Usuario user =sesion.attribute("currentUser");
 
 
-                Articulo art = new Articulo(15, titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
+                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
 
                 ArticuloQueries.getInstancia().crear(art);
 
@@ -128,13 +128,13 @@ public class Main {
 
             attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) sesion.attribute("currentUser")));
 
-            int id = Integer.valueOf(request.queryParams("id"));
+            Long id = Long.valueOf(request.queryParams("id"));
 
-
-          //  attributes.put("comentarios",bd.getComentariosArt(id));
-          //  attributes.put("articulo",bd.getArticulo(id));
-          //  attributes.put("id",request.queryParams("id"));
-          //  attributes.put("etiquetas",bd.getEtiquetasArt(id));
+            Articulo articulo = ArticuloQueries.getInstancia().find(id);
+            attributes.put("comentarios",articulo.getListaComentario());
+            attributes.put("articulo",articulo);
+            attributes.put("id",request.queryParams("id"));
+            attributes.put("etiquetas",articulo.getListaEtiqueta());
 
 
             return new ModelAndView(attributes, "articulo.ftl");
@@ -162,10 +162,10 @@ public class Main {
                 int idArt = Integer.parseInt(request.queryParams("idArt"));
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
-                    etiq.add(new Etiqueta(0, eti));
+                    etiq.add(new Etiqueta(eti));
                     //System.out.println(eti);
                 }
-                Articulo art = new Articulo(idArt, titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
+                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
                 //System.out.println(art.getId()+ " "+art.getTitulo());
              //   bd.actualizarArticulo(art);
             }
@@ -246,7 +246,6 @@ public class Main {
                 String pass = request.queryParams("pass");
                 Boolean admin = (request.queryParams("admin") ==null)? false:true;
 
-                //System.out.println(request.queryParams("admin"));
                 Usuario usuario = new Usuario(user,nombre,pass,admin,true);
                 UsuarioQueries.getInstancia().crear(usuario);
             }
@@ -262,11 +261,11 @@ public class Main {
             String user = request.queryParams("user");
             String pass = request.queryParams("pass");
             Usuario comprobar = UsuarioQueries.getInstancia().find(user);
-
-            if(comprobar.getPassword().equals(pass))
-            {
-                session.attribute("sesion", true);
-                session.attribute("currentUser", comprobar );
+            if(comprobar!=null) {
+                if (comprobar.getPassword().equals(pass)) {
+                    session.attribute("sesion", true);
+                    session.attribute("currentUser", comprobar);
+                }
             }
             else
                 session.attribute("sesion", false);
