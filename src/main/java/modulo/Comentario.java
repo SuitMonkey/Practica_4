@@ -12,7 +12,7 @@ public class Comentario implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private  String comentario;
-    @Transient
+    @ManyToOne
     private Usuario autor;
 //    @Transient
     @ManyToOne

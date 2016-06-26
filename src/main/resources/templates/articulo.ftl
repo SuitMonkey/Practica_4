@@ -40,7 +40,7 @@
             $("#button_logout").hide();
 
             if(variable==="true"){
-                console.log("dita vaina!~");
+
                 if ( ("${user.getUsername()}" === "${articulo.getAutor().getUsername()}") ||
                         ("${user.isAdministrador()?c}" === "true") )
                 {

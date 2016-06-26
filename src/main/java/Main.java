@@ -4,9 +4,11 @@
 
 import freemarker.template.Configuration;
 import modulo.Articulo;
+import modulo.Comentario;
 import modulo.Etiqueta;
 import modulo.Usuario;
 import servicios.ArticuloQueries;
+import servicios.ComentarioQueries;
 import servicios.EtiquetaQueries;
 import servicios.UsuarioQueries;
 import spark.ModelAndView;
@@ -151,7 +153,7 @@ public class Main {
             editarArt = (request.queryParams("editarArt")==null)?"null": "nonull";
             String elimC = request.queryParams("eliminarComentario");
             String comen = request.queryParams("comentario");
-            int id = Integer.parseInt(request.queryParams("idArticulo"));
+            Long id = Long.valueOf(request.queryParams("idArticulo"));
             //System.out.println("holaaaerrror");
 
 
@@ -177,18 +179,18 @@ public class Main {
                 }
                 else {
                     if (comen != null || !comen.equals("")) {
-                    //    Comentario com = new Comentario(0, comen, ((Usuario)sesion.attribute("currentUser")), bd.getArticulo(id));
-                    //    bd.insertarComentario(com, id);
+                        Comentario com = new Comentario(comen, ((Usuario)sesion.attribute("currentUser")), ((Articulo)ArticuloQueries.getInstancia().find(id)));
+                        ComentarioQueries.getInstancia().crear(com);
 
                     }
                 }
             }
 
-
-          //  attributes.put("articulo",bd.getArticulo(id));
-          //  attributes.put("comentarios",bd.getComentariosArt(id));
+            Articulo articulo = ArticuloQueries.getInstancia().find(id);
+            attributes.put("comentarios",articulo.getListaComentario());
+            attributes.put("articulo",articulo);
             attributes.put("id",id);
-          //  attributes.put("etiquetas",bd.getEtiquetasArt(id));
+            attributes.put("etiquetas",articulo.getListaEtiqueta());
 
             return new ModelAndView(attributes, "articulo.ftl");
         }, freeMarkerEngine);
