@@ -24,10 +24,9 @@ public class ArticuloQueries extends GestionDB<Articulo> {
         return instancia;
     }
 
-    public List<Articulo> findAllByNombre(String nombre){
+    public List<Articulo> findAllSorted(){
         EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Articulo.findAllByName");
-        query.setParameter("titulo", nombre+"%");
+        Query query = em.createNamedQuery("Articulo.findAllSorted");
         List<Articulo> lista = query.getResultList();
         return lista;
     }

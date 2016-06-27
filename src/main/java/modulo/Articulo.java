@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 @Entity
-@NamedQueries({@NamedQuery(name = "Articulo.findAllByName", query = "SELECT a FROM Articulo a WHERE a.titulo like :titulo")})
+@NamedQueries({@NamedQuery(name = "Articulo.findAllSorted", query = "SELECT a FROM Articulo a order by a.fecha desc")})
 public class Articulo implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,7 @@ public class Articulo implements Serializable{
     private String cuerpo;
     @ManyToOne
     private Usuario autor;
+    @OrderBy
     private Date fecha;
     @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
     private List<Comentario> listaComentario;

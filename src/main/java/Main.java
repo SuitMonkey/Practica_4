@@ -27,10 +27,8 @@ public class Main {
 
         staticFileLocation("/recursos");
 
-
-
         //if(UsuarioQueries.getInstancia().find("er12")==null)
-      //  UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
+//        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
 
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
@@ -44,6 +42,8 @@ public class Main {
             Session session = request.session(true);
             Boolean usuario = session.attribute("sesion");
             attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) session.attribute("currentUser")));
+
+            int pagina = 0;
 
             Boolean admin =session.attribute("admin");
 
@@ -69,22 +69,34 @@ public class Main {
                 }
             }
 
-            List<Articulo> articulos = ArticuloQueries.getInstancia().findAll();
-
+            List<Articulo> articulos = paginacion((List<Articulo>)ArticuloQueries.getInstancia().findAllSorted(),pagina);
             attributes.put("articulos",articulos);
+
+            //paginacion
+            if(pagina==0)
+                attributes.put("lugarPag","primera");
+            else
+                if(pagina==getCantPag())
+                {
+
+
+                }
+
 
 
             return new ModelAndView(attributes, "home.ftl");
         }, freeMarkerEngine);
 
         post("/", (request, response) -> {
+
             Session sesion = request.session(true);
 
             Map<String, Object> attributes = new HashMap<>();
 
             attributes.put("sesion","true");
-
             attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) sesion.attribute("currentUser")));
+
+            int pagina = 0;
 
             String insertArt = request.queryParams("crearArt");
             String elimArt = request.queryParams("eliminarArt");
@@ -99,9 +111,7 @@ public class Main {
                     EtiquetaQueries.getInstancia().crear(new Etiqueta(eti));
 
                 }
-
                 Usuario user =sesion.attribute("currentUser");
-
 
                 Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
 
@@ -118,7 +128,8 @@ public class Main {
                 }
 
             }
-            attributes.put("articulos",ArticuloQueries.getInstancia().findAll());
+            List<Articulo> articulos = paginacion((List<Articulo>)ArticuloQueries.getInstancia().findAllSorted(),pagina);
+            attributes.put("articulos",articulos);
             return new ModelAndView(attributes, "home.ftl");
         }, freeMarkerEngine);
 
@@ -172,10 +183,10 @@ public class Main {
              //   bd.actualizarArticulo(art);
             }
             else{
-                //System.out.println("break");
+
                 if(elimC!=null)
                 {
-                //    bd.eliminarComentario(Integer.valueOf(request.queryParams("eliminarComentarioV")));
+                    ComentarioQueries.getInstancia().eliminar(Long.valueOf(request.queryParams("eliminarComentarioV")));
                 }
                 else {
                     if (comen != null || !comen.equals("")) {
@@ -282,5 +293,20 @@ public class Main {
             return null;
         });
 
+    }
+    public static List<Articulo> paginacion(List<Articulo> la, int pagina)
+    {
+        List<Articulo> articulosPagina = new ArrayList<>();
+        double cant_pags = getCantPag(la.size());
+        for(int i= 5 * pagina; i < (5 * pagina)+5 && i< la.size(); i++ )
+        {
+            articulosPagina.add(la.get(i));
+        }
+        return articulosPagina;
+    }
+
+    public static double getCantPag(int size)
+    {
+        return java.lang.Math.ceil(  size/ 5 );
     }
 }
