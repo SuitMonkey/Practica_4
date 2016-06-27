@@ -34,9 +34,6 @@ public class Main {
         configuration.setClassForTemplateLoading(Main.class, "/templates");
         FreeMarkerEngine freeMarkerEngine = new FreeMarkerEngine( configuration );
 
-        //ArticuloQueries.getInstancia().eliminar(ArticuloQueries.getInstancia().findAll().get(0).getId());
-
-
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
@@ -50,20 +47,17 @@ public class Main {
             attributes.put("sesion","false");
 
             if(admin!=null) {
-                if(admin) {
+                if(admin)
                     attributes.put("sesion","true");
-                }
             }
             else
             {
                 if(usuario!=null){
-                    if(usuario) {
+                    if(usuario)
                         attributes.put("sesion","true");
-                    }
                 }
-                else {
+                else
                     attributes.put("estado","fuera");
-                }
             }
 
             List<Articulo> articulos = paginacion(ArticuloQueries.getInstancia().findAllSorted(),pagina);
@@ -105,15 +99,11 @@ public class Main {
             }
             else {
                 if(usuario!=null){
-                    if(usuario) {
-                        attributes.put("greetings","Saludos usuario mortal.");
+                    if(usuario)
                         attributes.put("sesion","true");
-                    }
                 }
-                else {
-                    attributes.put("greetings","");
+                else
                     attributes.put("estado","fuera");
-                }
             }
 
             List<Articulo> articulos = paginacion(ArticuloQueries.getInstancia().findAllSorted(),pagina);
