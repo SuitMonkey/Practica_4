@@ -43,7 +43,7 @@ public class Main {
             Boolean usuario = session.attribute("sesion");
             attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) session.attribute("currentUser")));
 
-            int pagina = 0;
+            int pagina = 1;
 
             Boolean admin =session.attribute("admin");
 
@@ -51,12 +51,59 @@ public class Main {
 
             if(admin!=null) {
                 if(admin) {
-                    attributes.put("greetings","Saludos Administardor.");
                     attributes.put("sesion","true");
                 }
             }
             else
             {
+                if(usuario!=null){
+                    if(usuario) {
+                        attributes.put("sesion","true");
+                    }
+                }
+                else {
+                    attributes.put("estado","fuera");
+                }
+            }
+
+            List<Articulo> articulos = paginacion(ArticuloQueries.getInstancia().findAllSorted(),pagina);
+            attributes.put("articulos",articulos);
+
+            //paginacion
+
+            int [] paginas = new int [(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())];
+            for(int i = 1 ;i <= paginas.length;i++)
+            {
+                if(pagina== i)
+                    continue;
+                paginas[i-1]= i;
+            }
+
+            attributes.put("irAdelante","si");
+            attributes.put("paginaActual","1");
+
+            attributes.put("paginas",paginas);
+            return new ModelAndView(attributes, "home.ftl");
+        }, freeMarkerEngine);
+
+        get("/page/:pagina", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+            Session session = request.session(true);
+            Boolean usuario = session.attribute("sesion");
+            attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) session.attribute("currentUser")));
+
+            int pagina = Integer.valueOf(request.params("pagina"));
+
+            Boolean admin =session.attribute("admin");
+            attributes.put("sesion","false");
+
+            if(admin!=null) {
+                if(admin) {
+                       attributes.put("greetings","Saludos Administardor.");
+                    attributes.put("sesion","true");
+                }
+            }
+            else {
                 if(usuario!=null){
                     if(usuario) {
                         attributes.put("greetings","Saludos usuario mortal.");
@@ -69,34 +116,43 @@ public class Main {
                 }
             }
 
-            List<Articulo> articulos = paginacion((List<Articulo>)ArticuloQueries.getInstancia().findAllSorted(),pagina);
+            List<Articulo> articulos = paginacion(ArticuloQueries.getInstancia().findAllSorted(),pagina);
             attributes.put("articulos",articulos);
 
             //paginacion
-            if(pagina==0)
-                attributes.put("lugarPag","primera");
-            else
-                if(pagina==getCantPag())
-                {
+            if(pagina==0&& getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())>1)
+                attributes.put("irAdelante","si");
+            else attributes.put("irAdelante","no");
+
+            if(pagina != 0&& pagina==(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size()-1))
+                attributes.put("irAtras","si");
+            else attributes.put("irAtras","no");
 
 
-                }
+            int [] paginas = new int [(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())];
+            for(int i = 1 ;i <= paginas.length;i++)
+            {
+                if(pagina== i)
+                    continue;
+                paginas[i-1]= i;
+            }
 
+            attributes.put("paginaActual",Integer.toString(pagina));
 
-
+            attributes.put("paginas",paginas);
             return new ModelAndView(attributes, "home.ftl");
         }, freeMarkerEngine);
 
+
         post("/", (request, response) -> {
-
             Session sesion = request.session(true);
-
             Map<String, Object> attributes = new HashMap<>();
 
             attributes.put("sesion","true");
             attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) sesion.attribute("currentUser")));
 
-            int pagina = 0;
+            int pagina = 1;
+
 
             String insertArt = request.queryParams("crearArt");
             String elimArt = request.queryParams("eliminarArt");
@@ -109,12 +165,9 @@ public class Main {
                 for (String eti : etiquetas.split(",")) {
                    // etiq.add(new Etiqueta(0, eti));
                     EtiquetaQueries.getInstancia().crear(new Etiqueta(eti));
-
                 }
                 Usuario user =sesion.attribute("currentUser");
-
                 Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
-
                 ArticuloQueries.getInstancia().crear(art);
 
             }
@@ -126,10 +179,25 @@ public class Main {
                     //System.out.println(elim);
                 //    bd.eliminarArticulo(elim);
                 }
-
             }
             List<Articulo> articulos = paginacion((List<Articulo>)ArticuloQueries.getInstancia().findAllSorted(),pagina);
             attributes.put("articulos",articulos);
+
+
+            //paginacion
+
+            int [] paginas = new int [(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())];
+            for(int i = 1 ;i <= paginas.length;i++)
+            {
+                if(pagina== i)
+                    continue;
+                paginas[i-1]= i;
+            }
+
+            attributes.put("irAdelante","si");
+            attributes.put("paginaActual","1");
+            attributes.put("paginas",paginas);
+
             return new ModelAndView(attributes, "home.ftl");
         }, freeMarkerEngine);
 
@@ -227,7 +295,6 @@ public class Main {
             {
                 attributes.put("message", "Username o password incorrectos.");
                 attributes.put("redireccionar", "no");
-
             }
 
             //response.redirect("/zonaadmin/");
@@ -236,8 +303,6 @@ public class Main {
 
         get("/administrarUsuarios", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-
-
             attributes.put("usuarios",UsuarioQueries.getInstancia().findAll());
 
             return new ModelAndView(attributes, "administrarUsuarios.ftl");
@@ -286,6 +351,16 @@ public class Main {
 
         });
 
+        before("/page/:pagina",(request, response) -> {
+
+            int pagina = Integer.valueOf(request.params(":pagina"));
+            int max = (int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size());
+            if(pagina<1)
+                response.redirect("/");
+            else
+                if(pagina> max)
+                    response.redirect("/page/"+max);
+        });
         get("/clear", (request, response) -> {
             request.session().removeAttribute("sesion");
             request.session().removeAttribute("currentUser");
@@ -298,7 +373,8 @@ public class Main {
     {
         List<Articulo> articulosPagina = new ArrayList<>();
         double cant_pags = getCantPag(la.size());
-        for(int i= 5 * pagina; i < (5 * pagina)+5 && i< la.size(); i++ )
+        int rate = 5 *(pagina-1);
+        for(int i=  rate; i < rate+5 && i< la.size(); i++ )
         {
             articulosPagina.add(la.get(i));
         }
@@ -307,6 +383,6 @@ public class Main {
 
     public static double getCantPag(int size)
     {
-        return java.lang.Math.ceil(  size/ 5 );
+        return java.lang.Math.ceil(  ((double)size)/ 5 );
     }
 }

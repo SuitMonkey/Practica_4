@@ -1,10 +1,6 @@
 <!DOCTYPE html>
-
-
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -169,6 +165,20 @@
     <footer>
         <div class="row">
             <div class="col-lg-12">
+                <paginaanterior></paginaanterior>
+            <#list paginas as pagina>
+                <#if pagina == 1>
+                    <a href="/">${pagina} </a>
+                <#else>
+                    <#if pagina == 0>
+                        <empty > </empty>
+                    <#else>
+                        <a href="/page/${pagina}">${pagina} </a>
+                    </#if>
+
+                </#if>
+            </#list>
+                <paginasgt></paginasgt>
                 <p>Copyright &copy; Ernesto y Francis 2016</p>
             </div>
             <!-- /.col-lg-12 -->
