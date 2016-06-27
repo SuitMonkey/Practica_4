@@ -30,7 +30,7 @@ public class Main {
 
 
         //if(UsuarioQueries.getInstancia().find("er12")==null)
-        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
+      //  UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
 
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");

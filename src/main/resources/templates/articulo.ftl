@@ -59,7 +59,23 @@
             }
         });
 
+
+        $(function () {
+            $(".like").click(function () {
+                var input = $(this).find('.qty1');
+                input.val(parseInt(input.val())+ 1);
+
+            });
+            $(".dislike").click(function () {
+                var input = $(this).find('.qty2');
+                input.val(input.val() - 1);
+            });
+        });
+
     </script>
+
+
+
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
@@ -123,6 +139,7 @@
             <span class="glyphicon glyphicon-time"></span>  Publicado en ${articulo.getFecha()}
             <input type = "hidden" name = "eliminarArt" value = "true">
             <div class = "editElim">
+
                 <a href="#" data-toggle="modal" data-target="#login-modal" style='margin-left: 20em; font-size: 15px;'>Editar</a>
                 <button class="btn btn-link" style='margin-left: 5em; font-size: 15px;' name="elim" value="${articulo.getId()}">Eliminar</button>
             </div>
@@ -134,6 +151,15 @@
             <!-- Preview Image -->
             <img class="img-responsive" src="http://www.caregivingclub.com/wp-content/uploads/2011/03/sunset-and-light-bulb-LG-900x300.jpg" alt="">
 
+            <hr>
+            <div class="container">
+                <a class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="0" />
+                </a>
+                <a class="dislike"><i class="fa fa-thumbs-o-down"></i>
+                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="0" />
+                </a>
+            </div>
             <hr>
 
             <!-- Post Content -->
