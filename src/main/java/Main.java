@@ -110,7 +110,7 @@ public class Main {
             attributes.put("articulos",articulos);
 
             //paginacion
-            if(pagina==0&& getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())>1)
+            if(pagina== 0 && getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())>1)
                 attributes.put("irAdelante","si");
             else attributes.put("irAdelante","no");
 
@@ -130,7 +130,7 @@ public class Main {
             attributes.put("paginaActual",Integer.toString(pagina));
 
             attributes.put("paginas",paginas);
-            return new ModelAndView(attributes, "home.ftl");
+            return new ModelAndView(attributes, "page.ftl");
         }, freeMarkerEngine);
 
 

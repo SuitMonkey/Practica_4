@@ -12,11 +12,11 @@
     <title>Blog Post - Start Bootstrap Template</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/blog-post.css" rel="stylesheet">
-    <link href="css/blog-home.css" rel="stylesheet">
+    <link href="../css/blog-post.css" rel="stylesheet">
+    <link href="../css/blog-home.css" rel="stylesheet">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

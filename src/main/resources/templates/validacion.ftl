@@ -74,7 +74,7 @@
         <div class="rowT" >
             <div class="col-lg-12" >
                 <hr>
-                <p>Copyright &copy; Your Website 2014</p>
+                <p>Copyright &copy; Your Website 2016</p>
             </div>
         </div>
         <!-- /.row -->

@@ -15,7 +15,6 @@
     <!-- Custom CSS -->
     <link href="../css/blog-home.css" rel="stylesheet">
 
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -23,8 +22,8 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 
 <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-    <script src="js/jq.js"></script>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jq.js"></script>
 
     <script type="text/javascript">
         $(document).ready( function (){
@@ -52,7 +51,7 @@
     </script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
 
     <![endif]-->
 
@@ -96,7 +95,6 @@
     <!-- /.container -->
 </nav>
 
-
 <!-- Area para agregar articulo -->
 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
@@ -128,22 +126,38 @@
             </h1>
 
             <!-- First Blog Post -->
-          <#list articulos as articulo>
-                <h2>
-                    <a href="/articulos?id=${articulo.getId()}">${articulo.getTitulo()}</a>
-                </h2>
-                <p class="lead">
-                    by <i>${articulo.getAutor().getUsername()}</i>
-                </p>
-                <p><span class="glyphicon glyphicon-time"></span> Publicado en ${articulo.getFecha()}</p>
-                <hr>
-                <p class="parrafoEsp">${articulo.getCuerpo()}</p>
-                <a class="btn btn-primary" href="/articulos?id=${articulo.getId()}">Leer más <span class="glyphicon glyphicon-chevron-right"></span></a>
-                <hr>
-            </#list>
+        <#list articulos as articulo>
+            <h2>
+                <a href="/articulos?id=${articulo.getId()}">${articulo.getTitulo()}</a>
+            </h2>
+            <p class="lead">
+                by <i>${articulo.getAutor().getUsername()}</i>
+            </p>
+            <p><span class="glyphicon glyphicon-time"></span> Publicado en ${articulo.getFecha()}</p>
+            <hr>
+            <p class="parrafoEsp">${articulo.getCuerpo()}</p>
+            <a class="btn btn-primary" href="/articulos?id=${articulo.getId()}">Leer más <span class="glyphicon glyphicon-chevron-right"></span></a>
+            <hr>
+        </#list>
+            <div class="col-md-4">
 
-    </div>
-    <!-- /.row -->
+                <!-- Blog Search Well
+                <div class="well">
+                    <h4>Blog Search</h4>
+                    <div class="input-group">
+                        <input type="text" class="form-control">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            </span>
+                    </div>
+                    <!-- /.input-group -
+                </div>-->
+            </div>
+
+        </div>
+        <!-- /.row -->
 
         <!-- Busqueda -->
         <div class="col-md-4">
@@ -162,35 +176,36 @@
             </div>
         </div>
         <!-- Fin busqueda -->
-    <hr>
 
-    <!-- Footer -->
-    <footer>
-        <div class="row">
-            <div class="col-lg-12">
-                <paginaanterior></paginaanterior>
-            <#list paginas as pagina>
-                <#if pagina == 1>
-                    <a href="/">${pagina} </a>
-                <#else>
-                    <#if pagina == 0>
-                        <empty > </empty>
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <paginaanterior></paginaanterior>
+                <#list paginas as pagina>
+                    <#if pagina == 1>
+                        <a href="/">${pagina} </a>
                     <#else>
-                        <a href="/page/${pagina}">${pagina} </a>
+                        <#if pagina == 0>
+                            <empty > </empty>
+                        <#else>
+                            <a href="/page/${pagina}">${pagina} </a>
+                        </#if>
+
                     </#if>
-
-                </#if>
-            </#list>
-                <paginasgt></paginasgt>
-                <p>Copyright &copy; Ernesto y Francis 2016</p>
+                </#list>
+                    <paginasgt></paginasgt>
+                    <p>Copyright &copy; Ernesto y Francis 2016</p>
+                </div>
+                <!-- /.col-lg-12 -->
             </div>
-            <!-- /.col-lg-12 -->
-        </div>
-        <!-- /.row -->
-    </footer>
+            <!-- /.row -->
+        </footer>
 
-</div>
-<!-- /.container -->
+    </div>
+    <!-- /.container -->
 
 </body>
 
