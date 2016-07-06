@@ -9,6 +9,8 @@
         <class>modulo.Comentario</class>
         <class>modulo.Etiqueta</class>
         <class>modulo.Usuario</class>
+        <class>modulo.LikeA</class>
+        <class>modulo.LikeC</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/Practica4" />
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />

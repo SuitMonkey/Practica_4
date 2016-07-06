@@ -126,40 +126,46 @@
             <h1 class="page-header">
                 Articulos
             </h1>
+            <#if EtiqNotFound??>
+                <h3>Etiqueta no encontrada</h3>
+            </#if>
 
-            <!-- First Blog Post -->
-          <#list articulos as articulo>
-                <h2>
-                    <a href="/articulos?id=${articulo.getId()}">${articulo.getTitulo()}</a>
-                </h2>
-                <p class="lead">
-                    by <i>${articulo.getAutor().getUsername()}</i>
-                </p>
-                <p><span class="glyphicon glyphicon-time"></span> Publicado en ${articulo.getFecha()}</p>
-                <hr>
-                <p class="parrafoEsp">${articulo.getCuerpo()}</p>
-                <a class="btn btn-primary" href="/articulos?id=${articulo.getId()}">Leer más <span class="glyphicon glyphicon-chevron-right"></span></a>
-                <hr>
-            </#list>
+            <#if articulos??>
+                <!-- First Blog Post -->
+              <#list articulos as articulo>
+                    <h2>
+                        <a href="/articulos?id=${articulo.getId()}">${articulo.getTitulo()}</a>
+                    </h2>
+                    <p class="lead">
+                        by <i>${articulo.getAutor().getUsername()}</i>
+                    </p>
+                    <p><span class="glyphicon glyphicon-time"></span> Publicado en ${articulo.getFecha()}</p>
+                    <hr>
+                    <p class="parrafoEsp">${articulo.getCuerpo()}</p>
+                    <a class="btn btn-primary" href="/articulos?id=${articulo.getId()}">Leer más <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <hr>
+                </#list>
+            </#if>
 
     </div>
     <!-- /.row -->
 
         <!-- Busqueda -->
         <div class="col-md-4">
-
+        <form method = "post" action = "/">
             <div class="well">
                 <h4>Blog Search</h4>
                 <div class="input-group">
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" name ="busqueda">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">
+                            <button class="btn btn-default" type="submit">
                                 <span class="glyphicon glyphicon-search"></span>
                         </button>
                         </span>
                 </div>
                 <!-- /.input-group -->
             </div>
+        </form>
         </div>
         <!-- Fin busqueda -->
     <hr>
@@ -168,20 +174,24 @@
     <footer>
         <div class="row">
             <div class="col-lg-12">
-                <paginaanterior></paginaanterior>
-            <#list paginas as pagina>
-                <#if pagina == 1>
-                    <a href="/">${pagina} </a>
-                <#else>
-                    <#if pagina == 0>
-                        <empty > </empty>
-                    <#else>
-                        <a href="/page/${pagina}">${pagina} </a>
-                    </#if>
+                <#if paginas??>
+
+                        <paginaanterior></paginaanterior>
+                        <#list paginas as pagina>
+                            <#if pagina == 1>
+                                <a href="/">${pagina} </a>
+                            <#else>
+                                <#if pagina == 0>
+                                    <empty > </empty>
+                                <#else>
+                                    <a href="/page/${pagina}">${pagina} </a>
+                                </#if>
+
+                            </#if>
+                        </#list>
+                        <paginasgt></paginasgt>
 
                 </#if>
-            </#list>
-                <paginasgt></paginasgt>
                 <p>Copyright &copy; Ernesto y Francis 2016</p>
             </div>
             <!-- /.col-lg-12 -->

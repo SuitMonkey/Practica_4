@@ -1,10 +1,8 @@
 package modulo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Francis Cáceres on 12/6/2016.
@@ -13,22 +11,26 @@ import java.io.Serializable;
 @NamedQueries({@NamedQuery(name = "Usuario.findAllByUsername", query = "SELECT a FROM Usuario a WHERE a.username like :username")})
 public class Usuario implements Serializable{
     @Id
-   private String username;
-   private String nombre;
-   private String password;
-   private boolean Administrador;
-   private boolean autor;
+    private String username;
+    private String nombre;
+    private String password;
+    private boolean Administrador;
+    private boolean autor;
+    @OneToMany(mappedBy = "usuario")
+    private List<LikeA> likesA;
+    @OneToMany(mappedBy = "usuario")
+    private List<LikeC> likesC;
 
     public Usuario(){
 
     }
 
-    public Usuario(String username, String nombre, String password, boolean administrador, boolean autor) {
+    public Usuario(String username, String nombre, String password, boolean administrador) {
         this.username = username;
         this.nombre = nombre;
         this.password = password;
         Administrador = administrador;
-        this.autor = autor;
+        this.autor = true;
     }
 
     public String getUsername() {
@@ -69,5 +71,21 @@ public class Usuario implements Serializable{
 
     public void setAutor(boolean autor) {
         this.autor = autor;
+    }
+
+    public List<LikeA> getLikesA() {
+        return likesA;
+    }
+
+    public void setLikesA(List<LikeA> likesA) {
+        this.likesA = likesA;
+    }
+
+    public List<LikeC> getLikesC() {
+        return likesC;
+    }
+
+    public void setLikesC(List<LikeC> likesC) {
+        this.likesC = likesC;
     }
 }

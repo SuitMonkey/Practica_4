@@ -18,6 +18,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 import java.util.*;
 
 import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Main {
 
@@ -27,8 +28,9 @@ public class Main {
 
         staticFileLocation("/recursos");
 
-        //if(UsuarioQueries.getInstancia().find("er12")==null)
-//        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true, true));
+        enableDebugScreen();
+        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
+        UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
 
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
@@ -38,7 +40,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
             Boolean usuario = session.attribute("sesion");
-            attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) session.attribute("currentUser")));
+            attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) session.attribute("currentUser")));
 
             int pagina = 1;
 
@@ -82,9 +84,10 @@ public class Main {
 
         get("/page/:pagina", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
+
             Session session = request.session(true);
             Boolean usuario = session.attribute("sesion");
-            attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) session.attribute("currentUser")));
+            attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) session.attribute("currentUser")));
 
             int pagina = Integer.valueOf(request.params("pagina"));
 
@@ -138,11 +141,23 @@ public class Main {
             Session sesion = request.session(true);
             Map<String, Object> attributes = new HashMap<>();
 
-            attributes.put("sesion","true");
-            attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) sesion.attribute("currentUser")));
+            attributes.put("sesion",((Boolean)request.session().attribute("sesion")).toString());
+            attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) sesion.attribute("currentUser")));
 
             int pagina = 1;
 
+            String busqueda = request.queryParams("busqueda");
+            if(busqueda != null) {
+                Etiqueta etiq = EtiquetaQueries.getInstancia().find(busqueda);
+                if(etiq != null){
+                    //TODO:arreglar etiquetas de articulos: estan vacias y si se busca se va a log in
+                    List<Articulo> articulos = ArticuloQueries.getInstancia().findAllByTagsSorted(etiq);
+                    attributes.put("articulos",articulos);
+                }
+                else attributes.put("EtiqNotFound","Etiqueta no encontrada.");
+
+                return new ModelAndView(attributes, "home.ftl");
+            }
 
             String insertArt = request.queryParams("crearArt");
             String elimArt = request.queryParams("eliminarArt");
@@ -177,8 +192,7 @@ public class Main {
             //paginacion
 
             int [] paginas = new int [(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())];
-            for(int i = 1 ;i <= paginas.length;i++)
-            {
+            for(int i = 1 ;i <= paginas.length;i++) {
                 if(pagina== i)
                     continue;
                 paginas[i-1]= i;
@@ -197,7 +211,7 @@ public class Main {
 
             attributes.put("sesion",(sesion.attribute("sesion")==null)?"false":sesion.attribute("sesion").toString());
 
-            attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false,false):((Usuario) sesion.attribute("currentUser")));
+            attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) sesion.attribute("currentUser")));
 
             Long id = Long.valueOf(request.queryParams("id"));
 
@@ -206,7 +220,6 @@ public class Main {
             attributes.put("articulo",articulo);
             attributes.put("id",request.queryParams("id"));
             attributes.put("etiquetas",articulo.getListaEtiqueta());
-
 
             return new ModelAndView(attributes, "articulo.ftl");
         }, freeMarkerEngine);
@@ -223,8 +236,6 @@ public class Main {
             String elimC = request.queryParams("eliminarComentario");
             String comen = request.queryParams("comentario");
             Long id = Long.valueOf(request.queryParams("idArticulo"));
-            //System.out.println("holaaaerrror");
-
 
             if(editarArt.equals("nonull")) {
                 String titulo = request.queryParams("titulo");
@@ -238,12 +249,10 @@ public class Main {
                 }
                 Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
                 //System.out.println(art.getId()+ " "+art.getTitulo());
-             //   bd.actualizarArticulo(art);
+                //   bd.actualizarArticulo(art);
             }
             else{
-
-                if(elimC!=null)
-                {
+                if(elimC!=null) {
                     ComentarioQueries.getInstancia().eliminar(Long.valueOf(request.queryParams("eliminarComentarioV")));
                 }
                 else {
@@ -304,7 +313,7 @@ public class Main {
             if(request.queryParams("elim")!=null)
             {
                 String usernam = request.queryParams("elim");
-                UsuarioQueries.getInstancia().eliminar(new Usuario(usernam,"","",false, false));
+                UsuarioQueries.getInstancia().eliminar(new Usuario(usernam,"","",false));
             }
             else
             {
@@ -314,7 +323,7 @@ public class Main {
                 String pass = request.queryParams("pass");
                 Boolean admin = (request.queryParams("admin") ==null)? false:true;
 
-                Usuario usuario = new Usuario(user,nombre,pass,admin,true);
+                Usuario usuario = new Usuario(user,nombre,pass,admin);
                 UsuarioQueries.getInstancia().crear(usuario);
             }
 

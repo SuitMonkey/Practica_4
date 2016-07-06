@@ -1,6 +1,7 @@
 package servicios;
 
 import modulo.Articulo;
+import modulo.Etiqueta;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -29,6 +30,13 @@ public class ArticuloQueries extends GestionDB<Articulo> {
         Query query = em.createNamedQuery("Articulo.findAllSorted");
         List<Articulo> lista = query.getResultList();
         return lista;
+    }
+
+    public List<Articulo> findAllByTagsSorted(Etiqueta tag){
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Articulo.findAllByTagsSorted");
+        List<Articulo> la = query.setParameter("tag", tag).getResultList();
+        return la;
     }
 
 }

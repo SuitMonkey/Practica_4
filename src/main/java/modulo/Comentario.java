@@ -2,6 +2,7 @@ package modulo;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Francis Cáceres on 12/6/2016.
@@ -14,9 +15,10 @@ public class Comentario implements Serializable{
     private  String comentario;
     @ManyToOne
     private Usuario autor;
-//    @Transient
     @ManyToOne
     private Articulo articulo;
+    @OneToMany(mappedBy = "Coment")
+    private List<LikeC> likes;
 
     public Comentario() {
 
@@ -58,5 +60,13 @@ public class Comentario implements Serializable{
 
     public void setArticulo(Articulo articulo) {
         this.articulo = articulo;
+    }
+
+    public List<LikeC> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LikeC> likes) {
+        this.likes = likes;
     }
 }

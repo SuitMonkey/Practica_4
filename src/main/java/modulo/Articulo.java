@@ -4,20 +4,20 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
-
-
 /**
  * Created by Francis Cáceres on 12/6/2016.
  */
 
 @Entity
-@NamedQueries({@NamedQuery(name = "Articulo.findAllSorted", query = "SELECT a FROM Articulo a order by a.fecha desc")})
+@NamedQueries(
+        {@NamedQuery(name = "Articulo.findAllSorted", query = "SELECT a FROM Articulo a order by a.fecha desc"),
+                @NamedQuery(name = "Articulo.findAllByTagsSorted", query = "SELECT a FROM Articulo a where :tag member of a.listaEtiqueta order by a.fecha desc")})
 public class Articulo implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String titulo;
+    @Column(length = 1000)
     private String cuerpo;
     @ManyToOne
     private Usuario autor;
@@ -25,8 +25,10 @@ public class Articulo implements Serializable{
     private Date fecha;
     @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
     private List<Comentario> listaComentario;
-    @ManyToMany(fetch=FetchType.EAGER)
+    @OneToMany(fetch=FetchType.EAGER)
     private List<Etiqueta> listaEtiqueta;
+    @OneToMany(mappedBy = "articulo")
+    private List<LikeA> likes;
 
     public Articulo(){
 
