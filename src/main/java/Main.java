@@ -3,14 +3,8 @@
  */
 
 import freemarker.template.Configuration;
-import modulo.Articulo;
-import modulo.Comentario;
-import modulo.Etiqueta;
-import modulo.Usuario;
-import servicios.ArticuloQueries;
-import servicios.ComentarioQueries;
-import servicios.EtiquetaQueries;
-import servicios.UsuarioQueries;
+import modulo.*;
+import servicios.*;
 import spark.ModelAndView;
 import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -29,8 +23,8 @@ public class Main {
         staticFileLocation("/recursos");
 
         enableDebugScreen();
-        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
-        UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
+//        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
+  //      UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
 
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
@@ -39,6 +33,10 @@ public class Main {
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
+            //--------------------------------------------------------
+            session.attribute("sesion", true);
+            session.attribute("currentUser", UsuarioQueries.getInstancia().find("er12"));
+            //----------------------------------------------------------
             Boolean usuario = session.attribute("sesion");
             attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) session.attribute("currentUser")));
 
@@ -83,6 +81,9 @@ public class Main {
         }, freeMarkerEngine);
 
         get("/page/:pagina", (request, response) -> {
+
+
+
             Map<String, Object> attributes = new HashMap<>();
 
             Session session = request.session(true);
@@ -113,16 +114,16 @@ public class Main {
             attributes.put("articulos",articulos);
 
             //paginacion
-            if(pagina== 0 && getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())>1)
+            if(pagina== 0 && getCantPag(articulos.size())>1)
                 attributes.put("irAdelante","si");
             else attributes.put("irAdelante","no");
 
-            if(pagina != 0&& pagina==(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size()-1))
+            if(pagina != 0&& pagina==(int)getCantPag(articulos.size()-1))
                 attributes.put("irAtras","si");
             else attributes.put("irAtras","no");
 
 
-            int [] paginas = new int [(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())];
+            int [] paginas = new int [(int)getCantPag(articulos.size())];
             for(int i = 1 ;i <= paginas.length;i++)
             {
                 if(pagina== i)
@@ -135,6 +136,66 @@ public class Main {
             attributes.put("paginas",paginas);
             return new ModelAndView(attributes, "page.ftl");
         }, freeMarkerEngine);
+
+
+        get("tags/:tag/page/:pagina", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+
+            Session session = request.session(true);
+            Boolean usuario = session.attribute("sesion");
+            attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) session.attribute("currentUser")));
+
+            int pagina = Integer.valueOf(request.params("pagina"));
+
+            Boolean admin =session.attribute("admin");
+            attributes.put("sesion","false");
+
+            if(admin!=null) {
+                if(admin) {
+                    attributes.put("greetings","Saludos Administardor.");
+                    attributes.put("sesion","true");
+                }
+            }
+            else {
+                if(usuario!=null){
+                    if(usuario)
+                        attributes.put("sesion","true");
+                }
+                else
+                    attributes.put("estado","fuera");
+            }
+
+            String tag = request.params("tag");
+            Etiqueta etiq = EtiquetaQueries.getInstancia().find(tag);
+            List<Articulo> articulos = paginacion(ArticuloQueries.getInstancia().findAllByTagsSorted(etiq),pagina);
+            attributes.put("articulos",articulos);
+
+            //paginacion
+            if(pagina == 0 && getCantPag(articulos.size())>1)
+                attributes.put("irAdelante","si");
+            else attributes.put("irAdelante","no");
+
+            if(pagina != 0&& pagina==(int)getCantPag(articulos.size()-1))
+                attributes.put("irAtras","si");
+            else attributes.put("irAtras","no");
+
+
+            int [] paginas = new int [(int)getCantPag(articulos.size())];
+            for(int i = 1 ;i <= paginas.length;i++)
+            {
+                if(pagina== i)
+                    continue;
+                paginas[i-1]= i;
+            }
+
+            attributes.put("paginaActual",Integer.toString(pagina));
+            attributes.put("tag",tag);
+
+            attributes.put("paginas",paginas);
+            return new ModelAndView(attributes, "pageT.ftl");
+        }, freeMarkerEngine);
+
 
 
         post("/", (request, response) -> {
@@ -151,8 +212,9 @@ public class Main {
                 Etiqueta etiq = EtiquetaQueries.getInstancia().find(busqueda);
                 if(etiq != null){
                     //TODO:arreglar etiquetas de articulos: estan vacias y si se busca se va a log in
-                    List<Articulo> articulos = ArticuloQueries.getInstancia().findAllByTagsSorted(etiq);
-                    attributes.put("articulos",articulos);
+                    response.redirect("/tags/"+etiq.getEtiqueta()+"/page/1");
+                    //List<Articulo> articulos = ArticuloQueries.getInstancia().findAllByTagsSorted(etiq);
+                    //attributes.put("articulos",articulos);
                 }
                 else attributes.put("EtiqNotFound","Etiqueta no encontrada.");
 
@@ -168,12 +230,13 @@ public class Main {
                 String etiquetas = request.queryParams("area-etiqueta");
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
-                   // etiq.add(new Etiqueta(0, eti));
+                    etiq.add(new Etiqueta(eti));
                     EtiquetaQueries.getInstancia().crear(new Etiqueta(eti));
                 }
                 Usuario user =sesion.attribute("currentUser");
-                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
+                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, etiq,new ArrayList<LikeA>());
                 ArticuloQueries.getInstancia().crear(art);
+                ArticuloQueries.getInstancia().crearEsp(art.getId(),etiq);
 
             }
             else {
@@ -221,6 +284,50 @@ public class Main {
             attributes.put("id",request.queryParams("id"));
             attributes.put("etiquetas",articulo.getListaEtiqueta());
 
+
+            //Likes!---------------------
+            int totalLA=0,totalDA = 0;
+
+            for(LikeA l :LikeAQueries.getInstancia().findAll()) {
+                if(l.getIsLike() && l.getArticulo().getId() == id) {
+                    totalLA++;
+                }
+                if(l.getIsLike() && l.getArticulo().getId() == id) {
+                    totalDA++;
+                }
+
+            }
+            String LikeArticulo = null;
+                for(LikeA lc : articulo.getLikes()) {
+                    if(lc.getUsuario().getUsername().equals(((Usuario) sesion.attribute("currentUser")).getUsername()));{
+                        if(lc.getIsLike()) {
+                            LikeArticulo = "Like";
+                            attributes.put("dioLike", "");
+                        }
+                        else {
+                            LikeArticulo = "disLike";
+                            attributes.put("dioDisLike","");
+                        }
+                        break;
+
+                    }
+                }
+            if(LikeArticulo == null)
+            {
+                attributes.put("aunNada",totalLA);
+                LikeArticulo = "noLike";
+            }
+
+
+
+            attributes.put("totalLA",totalLA);
+            attributes.put("totalDA",totalDA);
+
+
+            //---------------------------
+
+
+
             return new ModelAndView(attributes, "articulo.ftl");
         }, freeMarkerEngine);
 
@@ -230,6 +337,9 @@ public class Main {
             attributes.put("sesion","true");
 
             attributes.put("user",(sesion.attribute("currentUser")==null)?"false":((Usuario) sesion.attribute("currentUser")));
+
+            attributes.put("LikesA", LikeAQueries.getInstancia().findAll());
+            attributes.put("LikesC", LikeCQueries.getInstancia().findAll());
 
             String editarArt = null;
             editarArt = (request.queryParams("editarArt")==null)?"null": "nonull";
@@ -247,9 +357,9 @@ public class Main {
                     etiq.add(new Etiqueta(eti));
                     //System.out.println(eti);
                 }
-                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, null, etiq);
+                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), new ArrayList<Comentario>(), etiq, new ArrayList<LikeA>());
                 //System.out.println(art.getId()+ " "+art.getTitulo());
-                //   bd.actualizarArticulo(art);
+                //bd.actualizarArticulo(art);
             }
             else{
                 if(elimC!=null) {
@@ -257,21 +367,58 @@ public class Main {
                 }
                 else {
                     if (comen != null || !comen.equals("")) {
-                        Comentario com = new Comentario(comen, ((Usuario)sesion.attribute("currentUser")), ((Articulo)ArticuloQueries.getInstancia().find(id)));
+                        Comentario com = new Comentario(comen, ((Usuario)sesion.attribute("currentUser")), ((Articulo)ArticuloQueries.getInstancia().find(id)), new ArrayList<LikeC>());
                         ComentarioQueries.getInstancia().crear(com);
-
                     }
                 }
             }
 
+
             Articulo articulo = ArticuloQueries.getInstancia().find(id);
             attributes.put("comentarios",articulo.getListaComentario());
-            attributes.put("articulo",articulo);
-            attributes.put("id",id);
-            attributes.put("etiquetas",articulo.getListaEtiqueta());
+            response.redirect("/articulos?id="+articulo.getId());
 
             return new ModelAndView(attributes, "articulo.ftl");
         }, freeMarkerEngine);
+
+        get("/articulos/:artCo/:like", (request, response) -> {
+            Session sesion = request.session(true);
+            String mode = request.queryParams("like");
+            Articulo art = ArticuloQueries.getInstancia().find(Long.valueOf(request.params("artCo")));
+            Comentario comentario = ComentarioQueries.getInstancia().find(Integer.valueOf(request.params("artCo")));
+            if("likeA".equals(mode))
+            {
+                LikeA like = new LikeA(true,art,(Usuario)sesion.attribute("currentUser"));
+                LikeAQueries.getInstancia().crear(like);
+                art.addLikeA(like);
+
+            }
+            else if ("dislikeA".equals(mode))
+            {
+                LikeA like = new LikeA(false,art,(Usuario)sesion.attribute("currentUser"));
+                LikeAQueries.getInstancia().crear(like);
+                art.addLikeA(like);
+
+            }
+            else if("likeC".equals(mode))
+            {
+                LikeC like = new LikeC(true,comentario,(Usuario)sesion.attribute("currentUser"));
+                LikeCQueries.getInstancia().crear(like);
+                comentario.addLikeC(like);
+
+            }
+            else  if("dislikeC".equals(mode))
+            {
+                LikeC like = new LikeC(false,comentario,(Usuario)sesion.attribute("currentUser"));
+                LikeCQueries.getInstancia().crear(like);
+                comentario.addLikeC(like);
+            }
+
+            response.redirect("/articulos?id="+art.getId());
+
+            return null;
+        }, freeMarkerEngine);
+
 
         get("/login", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
@@ -295,8 +442,6 @@ public class Main {
                 attributes.put("message", "Username o password incorrectos.");
                 attributes.put("redireccionar", "no");
             }
-
-            //response.redirect("/zonaadmin/");
             return new ModelAndView(attributes, "validacion.ftl");
         }, freeMarkerEngine);
 
@@ -368,6 +513,7 @@ public class Main {
         });
 
     }
+
     public static List<Articulo> paginacion(List<Articulo> la, int pagina)
     {
         List<Articulo> articulosPagina = new ArrayList<>();

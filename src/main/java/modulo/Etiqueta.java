@@ -1,9 +1,9 @@
 package modulo;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
 
 /**
@@ -14,13 +14,19 @@ import java.io.Serializable;
 public class Etiqueta implements Serializable{
     @Id
     private String etiqueta;
+    @ManyToOne
+    private Articulo articulo;
 
-    public Etiqueta(){
+    public Etiqueta(){}
 
+    public Etiqueta(String e){
+
+        this.etiqueta = e;
     }
 
-    public Etiqueta( String etiqueta) {
+    public Etiqueta(String etiqueta, Articulo articulo) {
         this.etiqueta = etiqueta;
+        this.articulo = articulo;
     }
 
     public String getEtiqueta() {
@@ -29,5 +35,17 @@ public class Etiqueta implements Serializable{
 
     public void setEtiqueta(String etiqueta) {
         this.etiqueta = etiqueta;
+    }
+
+    public Articulo getArticulo() {
+        return articulo;
+    }
+
+    public void setArticulo(Articulo articulo) {
+        this.articulo = articulo;
+
+        if (!articulo.getListaEtiqueta().contains(this)) {
+            articulo.getListaEtiqueta().add(this);
+        }
     }
 }

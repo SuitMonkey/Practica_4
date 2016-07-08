@@ -24,10 +24,11 @@ public class Comentario implements Serializable{
 
     }
 
-    public Comentario( String comentario, Usuario autor, Articulo articulo) {
+    public Comentario( String comentario, Usuario autor, Articulo articulo, List<LikeC> likes) {
         this.comentario = comentario;
         this.autor = autor;
         this.articulo = articulo;
+        this.likes = likes;
     }
 
     public int getId() {
@@ -69,4 +70,42 @@ public class Comentario implements Serializable{
     public void setLikes(List<LikeC> likes) {
         this.likes = likes;
     }
+
+    public void addLikeC(LikeC like) {
+        this.likes.add(like);
+        if (like.getComent() != this) {
+            like.setComent(this);
+        }
+    }
+
+    public String isLikeUsuario( Usuario u )
+    {
+        for(LikeC lc : likes)
+        {
+            if(lc.getUsuario().getUsername().equals(u.getUsername()))
+            {
+                if(lc.getIsLike())
+                {
+                    return "Like";
+
+                }
+                else
+                    return "disLike";
+
+            }
+        }
+        return "noLike";
+
+    }
+    public int getGoodLikes()
+    {
+        int sum= 0 ;
+        for(LikeC la : likes)
+        {
+            if(la.getIsLike())
+                sum++;
+        }
+        return sum;
+    }
+
 }

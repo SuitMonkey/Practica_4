@@ -25,6 +25,38 @@ public class ArticuloQueries extends GestionDB<Articulo> {
         return instancia;
     }
 
+
+    public void crearEsp(Long Id, List<Etiqueta> le){
+
+        EntityManager em = getEntityManager();
+
+
+        em.getTransaction().begin();
+
+        try {
+
+//            em.getTransaction().commit();
+            Articulo art = em.find(Articulo.class,Id);
+
+            for (Etiqueta it : le) {
+                Etiqueta e = em.find(Etiqueta.class,it.getEtiqueta());
+                e.setArticulo(art);
+                art.addEtiqueta(e);
+
+
+                //em.merge(e);
+            }
+            em.getTransaction().commit();
+
+        }catch (Exception ex){
+            em.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            em.close();
+        }
+
+    }
+
     public List<Articulo> findAllSorted(){
         EntityManager em = getEntityManager();
         Query query = em.createNamedQuery("Articulo.findAllSorted");

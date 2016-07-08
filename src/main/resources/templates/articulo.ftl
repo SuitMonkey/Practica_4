@@ -60,7 +60,7 @@
         });
 
 
-        $(function () {
+/*        $(function () {
             $(".like").click(function () {
                 var input = $(this).find('.qty1');
                 input.val(parseInt(input.val())+ 1);
@@ -70,7 +70,7 @@
                 var input = $(this).find('.qty2');
                 input.val(input.val() - 1);
             });
-        });
+        });*/
 
     </script>
 
@@ -100,13 +100,13 @@
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-           <ul class="nav navbar-nav navbar-right">
-               <li>
-                   <div class="btn-nav"><a class="btn btn-default navbar-btn" id="button_login" href="/login" > Entrar</a></div>
-               </li>
-               <li>
-                   <div class="btn-nav"><a class="btn btn-danger navbar-btn " id="button_logout" href="/clear" > Salir</a></div>
-               </li>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div class="btn-nav"><a class="btn btn-default navbar-btn" id="button_login" href="/login" > Entrar</a></div>
+                </li>
+                <li>
+                    <div class="btn-nav"><a class="btn btn-danger navbar-btn " id="button_logout" href="/clear" > Salir</a></div>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -135,15 +135,15 @@
 
             <!-- Date/Time -->
             <p>
-        <form action ="/" method = "post">
-            <span class="glyphicon glyphicon-time"></span>  Publicado en ${articulo.getFecha()}
-            <input type = "hidden" name = "eliminarArt" value = "true">
-            <div class = "editElim">
+            <form action ="/" method = "post">
+                <span class="glyphicon glyphicon-time"></span>  Publicado en ${articulo.getFecha()}
+                <input type = "hidden" name = "eliminarArt" value = "true">
+                <div class = "editElim">
 
-                <a href="#" data-toggle="modal" data-target="#login-modal" style='margin-left: 20em; font-size: 15px;'>Editar</a>
-                <button class="btn btn-link" style='margin-left: 5em; font-size: 15px;' name="elim" value="${articulo.getId()}">Eliminar</button>
-            </div>
-        </form>
+                    <a href="#" data-toggle="modal" data-target="#login-modal" style='margin-left: 20em; font-size: 15px;'>Editar</a>
+                    <button class="btn btn-link" style='margin-left: 5em; font-size: 15px;' name="elim" value="${articulo.getId()}">Eliminar</button>
+                </div>
+            </form>
             </p>
 
             <hr>
@@ -153,37 +153,61 @@
 
             <hr>
             <div class="container">
-                <a class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
-                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="0" />
-                </a>
-                <a class="dislike"><i class="fa fa-thumbs-o-down"></i>
-                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="0" />
-                </a>
-            </div>
+                <#if sesion??>
+                    <#if dioLike??>
+                        <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                            Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
+                        </ta>
+                        <a class="dislike" href = "/articulos/${id}/likeA"><i class="fa fa-thumbs-o-down"></i>
+                            Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
+                        </a>
+                    </#if>
+
+                    <#if dioDisLike??>
+                        <a class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                            Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
+                        </a>
+                        <ta class="dislike" href = "/articulos/${id}/dislikeA"><i class="fa fa-thumbs-o-down"></i>
+                            Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
+                        </ta>
+                    </#if>
+
+                    <#if aunNada??>
+                        <a class="like" href = "/articulos/${id}/likeA" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                            Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
+                        </a>
+                        <a class="dislike" href = "/articulos/${id}/dislikeA"><i class="fa fa-thumbs-o-down"></i>
+                            Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
+                        </a>
+                    </#if>
+
+                </div>
+
+                </#if>
             <hr>
 
             <!-- Post Content -->
             <p class="lead">${articulo.getCuerpo()}</p>
-          <!--  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
--->
+            <!--  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
+  -->
             <hr>
 
             <!-- Blog Comments -->
 
             <!-- Comments Form -->
             <div class = "hacerComentario" >
-            <div class="well">
-                <h4>Deja tu Comentario:</h4>
-                <form role="form" action="/articulos" method="post">
-                    <div class="form-group">
-                        <textarea class="form-control" name="comentario" rows="3"></textarea>
-                    </div><input type="hidden" name="idArticulo" value="${id}">
-                    <input type="submit" class="btn btn-primary" value = "Comentar!"></input>
-                </form>
-            </div>
+                <div class="well">
+                    <h4>Deja tu Comentario:</h4>
+                    <form role="form" action="/articulos" method="post">
+                        <div class="form-group">
+                            <textarea class="form-control" name="comentario" rows="3"></textarea>
+                        </div><input type="hidden" name="idArticulo" value="${id}">
+                        <input type="submit" class="btn btn-primary" value = "Comentar!"></input>
+                    </form>
+                </div>
             </div>
 
             <hr>
@@ -217,7 +241,7 @@
                     <div class="media-body">
                         <h4 class="media-heading">${coment.getAutor().getUsername()}</h4>
                         <div class="form-group">
-                       <textarea class="form-control" rows="2" readonly> ${coment.getComentario()} </textarea>
+                            <textarea class="form-control" rows="2" readonly> ${coment.getComentario()} </textarea>
                         </div>
                         <div class="elimComent">
                             <form action="/articulos" method="post" >
@@ -225,6 +249,38 @@
                                 <input type="hidden" name="idArticulo" value="${id}">
                                 <input name = "eliminarComentario" type="submit" class="btn btn-danger" value = "Eliminar"></input>
                             </form>
+                        </div>
+                        <div class="container">
+                            <#if sesion??>
+                                <#if coment.isLikeUsuario(user.getUsername()) == "Like"></#if>
+
+                                <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${coment.getLikes().size()}" />
+                                </ta>
+
+                                <a class="dislike" href = "/articulos/${id}/disLikeC"><i class="fa fa-thumbs-o-down"></i>
+                                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${coment.getLikes().size()}" />
+                                </a>
+
+                                <#if coment.isLikeUsuario(user.getUsername()) == "disLike"></#if>
+                                <a class="like" href = "/articulos/${id}/likeC"style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLC}" />
+                                </a>
+
+                                <ta class="dislike" ><i class="fa fa-thumbs-o-down"></i>
+                                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDC}" />
+                                </ta>
+
+                                <#if coment.isLikeUsuario(user.getUsername()) == "noLike">
+                                    <a class="like" href = "/articulos/${id}/likeC" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLC}" />
+                                    </a>
+                                    <a class="dislike" href = "/articulos/${id}/disLikeC"><i class="fa fa-thumbs-o-down"></i>
+                                        Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDC}" />
+                                    </a>
+                                </#if>
+
+                            </#if>
 
                         </div>
 

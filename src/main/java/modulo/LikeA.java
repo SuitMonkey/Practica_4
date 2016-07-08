@@ -1,7 +1,6 @@
 package modulo;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by Ernesto on 04-Jul-16.
@@ -11,7 +10,7 @@ public class LikeA {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Boolean Like;
+    private Boolean isLike;
     @ManyToOne
     private Articulo articulo;
     @ManyToOne
@@ -19,6 +18,12 @@ public class LikeA {
 
 
     public LikeA(){}
+
+    public LikeA(Boolean isLike, Articulo articulo, Usuario usuario) {
+        this.isLike = isLike;
+        this.articulo = articulo;
+        this.usuario = usuario;
+    }
 
     public int getId() {
         return id;
@@ -28,12 +33,12 @@ public class LikeA {
         this.id = id;
     }
 
-    public Boolean getLike() {
-        return Like;
+    public Boolean getIsLike() {
+        return isLike;
     }
 
-    public void setLike(Boolean like) {
-        Like = like;
+    public void setIsLike(Boolean like) {
+        like = like;
     }
 
     public Articulo getArticulo() {

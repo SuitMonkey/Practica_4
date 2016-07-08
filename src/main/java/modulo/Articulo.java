@@ -1,7 +1,9 @@
 package modulo;
 
 import javax.persistence.*;
+import javax.persistence.criteria.Fetch;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 /**
@@ -16,6 +18,7 @@ public class Articulo implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(length = 1000)
     private String titulo;
     @Column(length = 1000)
     private String cuerpo;
@@ -25,22 +28,27 @@ public class Articulo implements Serializable{
     private Date fecha;
     @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
     private List<Comentario> listaComentario;
-    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
     private List<Etiqueta> listaEtiqueta;
-    @OneToMany(mappedBy = "articulo")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo")
     private List<LikeA> likes;
 
     public Articulo(){
 
     }
 
-    public Articulo(String titulo, String cuerpo, Usuario autor, Date fecha, List<Comentario> listaComentario, List<Etiqueta> listaEtiqueta) {
+    public Articulo(String titulo, String cuerpo, Usuario autor,  List<Comentario> listaComentario, List<Etiqueta> listaEtiqueta, List<LikeA> likes) {
         this.titulo = titulo;
         this.cuerpo = cuerpo;
         this.autor = autor;
-        this.fecha = fecha;
+        //this.fecha = fecha;
         this.listaComentario = listaComentario;
-        this.listaEtiqueta = listaEtiqueta;
+        this.listaEtiqueta = new ArrayList<>();
+        for(Etiqueta e : listaEtiqueta)
+        {
+            addEtiqueta(e);
+        }
+        this.likes = likes;
 
         fecha = new Date();
         java.sql.Date fechas = new java.sql.Date(fecha.getTime());
@@ -102,5 +110,37 @@ public class Articulo implements Serializable{
 
     public void setListaEtiqueta(List<Etiqueta> listaEtiqueta) {
         this.listaEtiqueta = listaEtiqueta;
+    }
+
+    public List<LikeA> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LikeA> likes) {
+        this.likes = likes;
+    }
+
+    public void addLikeA(LikeA like) {
+        this.likes.add(like);
+        if (like.getArticulo() != this) {
+            like.setArticulo(this);
+        }
+    }
+
+    public void addEtiqueta(Etiqueta et) {
+        this.listaEtiqueta.add(et);
+        if (et.getArticulo() != this) {
+            et.setArticulo(this);
+        }
+    }
+    public int getGoodLikes()
+    {
+        int sum= 0 ;
+        for(LikeA la : likes)
+        {
+            if(la.getIsLike())
+                sum++;
+        }
+        return sum;
     }
 }

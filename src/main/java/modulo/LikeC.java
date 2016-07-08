@@ -10,13 +10,19 @@ public class LikeC {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Boolean Like;
+    private Boolean isLike;
     @ManyToOne
     private Comentario Coment;
     @ManyToOne
     private Usuario usuario;
 
     public LikeC(){}
+
+    public LikeC(Boolean isLike, Comentario coment, Usuario usuario) {
+        this.isLike = isLike;
+        Coment = coment;
+        this.usuario = usuario;
+    }
 
     public int getId() {
         return id;
@@ -26,12 +32,12 @@ public class LikeC {
         this.id = id;
     }
 
-    public Boolean getLike() {
-        return Like;
+    public Boolean getIsLike() {
+        return isLike;
     }
 
-    public void setLike(Boolean like) {
-        Like = like;
+    public void setIsLike(Boolean like) {
+        this.isLike = like;
     }
 
     public Comentario getComent() {

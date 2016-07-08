@@ -16,6 +16,8 @@ public class Usuario implements Serializable{
     private String password;
     private boolean Administrador;
     private boolean autor;
+    @OneToMany(mappedBy = "autor")
+    private List<Articulo> articulos;
     @OneToMany(mappedBy = "usuario")
     private List<LikeA> likesA;
     @OneToMany(mappedBy = "usuario")
@@ -87,5 +89,33 @@ public class Usuario implements Serializable{
 
     public void setLikesC(List<LikeC> likesC) {
         this.likesC = likesC;
+    }
+
+    public List<Articulo> getArticulos() {
+        return articulos;
+    }
+
+    public void setArticulos(List<Articulo> articulos) {
+        this.articulos = articulos;
+    }
+
+    public void addArticulo(Articulo art) {
+        this.articulos.add(art);
+        if (art.getAutor() != this) {
+            art.setAutor(this);
+        }
+    }
+    public void addLikeA(LikeA la) {
+        this.likesA.add(la);
+        if (la.getUsuario() != this) {
+            la.setUsuario(this);
+        }
+    }
+
+    public void addLikeC(LikeC la) {
+        this.likesC.add(la);
+        if (la.getUsuario() != this) {
+            la.setUsuario(this);
+        }
     }
 }
