@@ -1,12 +1,13 @@
 package modulo;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Ernesto on 04-Jul-16.
  */
 @Entity
-public class LikeC {
+public class LikeC implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -1,5 +1,7 @@
 package modulo;
 
+import servicios.LikeAQueries;
+
 import javax.persistence.*;
 import javax.persistence.criteria.Fetch;
 import java.io.Serializable;
@@ -30,7 +32,8 @@ public class Articulo implements Serializable{
     private List<Comentario> listaComentario;
     @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
     private List<Etiqueta> listaEtiqueta;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo",orphanRemoval = true)
+
     private List<LikeA> likes;
 
     public Articulo(){
@@ -143,4 +146,16 @@ public class Articulo implements Serializable{
         }
         return sum;
     }
+    public boolean hasLikeFrom(Usuario usuario)
+    {
+        for (LikeA la : likes)
+        {
+            if( la.getUsuario().getUsername().equals(usuario.getUsername()) &&la.getIsLike())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

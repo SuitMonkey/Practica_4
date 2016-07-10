@@ -18,9 +18,9 @@ public class Usuario implements Serializable{
     private boolean autor;
     @OneToMany(mappedBy = "autor")
     private List<Articulo> articulos;
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER)
     private List<LikeA> likesA;
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER)
     private List<LikeC> likesC;
 
     public Usuario(){

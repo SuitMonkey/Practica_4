@@ -23,8 +23,10 @@ public class Main {
         staticFileLocation("/recursos");
 
         enableDebugScreen();
+        //Forces
 //        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
   //      UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
+
 
         Configuration configuration = new Configuration();
         configuration.setClassForTemplateLoading(Main.class, "/templates");
@@ -33,10 +35,6 @@ public class Main {
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
-            //--------------------------------------------------------
-            session.attribute("sesion", true);
-            session.attribute("currentUser", UsuarioQueries.getInstancia().find("er12"));
-            //----------------------------------------------------------
             Boolean usuario = session.attribute("sesion");
             attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) session.attribute("currentUser")));
 
@@ -123,7 +121,7 @@ public class Main {
             else attributes.put("irAtras","no");
 
 
-            int [] paginas = new int [(int)getCantPag(articulos.size())];
+            int [] paginas = new int [(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())];
             for(int i = 1 ;i <= paginas.length;i++)
             {
                 if(pagina== i)
@@ -242,7 +240,8 @@ public class Main {
             else {
                 if (elimArt != null)
                 {
-                    int elim = Integer.parseInt(request.queryParams("elim"));
+                    Long elim = Long.parseLong(request.queryParams("elim"));
+                    ArticuloQueries.getInstancia().eliminar(elim);
 
                     //System.out.println(elim);
                 //    bd.eliminarArticulo(elim);
@@ -271,6 +270,11 @@ public class Main {
         get("/articulos", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session sesion = request.session(true);
+            //--------------------------------------------------------
+            sesion.attribute("sesion", true);
+            sesion.attribute("currentUser", UsuarioQueries.getInstancia().find("er12"));
+            //----------------------------------------------------------
+
 
             attributes.put("sesion",(sesion.attribute("sesion")==null)?"false":sesion.attribute("sesion").toString());
 
@@ -292,14 +296,15 @@ public class Main {
                 if(l.getIsLike() && l.getArticulo().getId() == id) {
                     totalLA++;
                 }
-                if(l.getIsLike() && l.getArticulo().getId() == id) {
+                if(!l.getIsLike() && l.getArticulo().getId() == id) {
                     totalDA++;
                 }
 
             }
             String LikeArticulo = null;
+            if(sesion.attribute ("currentUser") != null)
                 for(LikeA lc : articulo.getLikes()) {
-                    if(lc.getUsuario().getUsername().equals(((Usuario) sesion.attribute("currentUser")).getUsername()));{
+                    if(lc.getUsuario().getUsername().equals(((Usuario) sesion.attribute ("currentUser")).getUsername())){
                         if(lc.getIsLike()) {
                             LikeArticulo = "Like";
                             attributes.put("dioLike", "");
@@ -363,7 +368,7 @@ public class Main {
             }
             else{
                 if(elimC!=null) {
-                    ComentarioQueries.getInstancia().eliminar(Long.valueOf(request.queryParams("eliminarComentarioV")));
+                    ComentarioQueries.getInstancia().eliminar(Integer.valueOf(request.queryParams("eliminarComentarioV")));
                 }
                 else {
                     if (comen != null || !comen.equals("")) {
@@ -381,34 +386,51 @@ public class Main {
             return new ModelAndView(attributes, "articulo.ftl");
         }, freeMarkerEngine);
 
-        get("/articulos/:artCo/:like", (request, response) -> {
+        get("/articulos/:art/:like", (request, response) -> {
             Session sesion = request.session(true);
-            String mode = request.queryParams("like");
-            Articulo art = ArticuloQueries.getInstancia().find(Long.valueOf(request.params("artCo")));
-            Comentario comentario = ComentarioQueries.getInstancia().find(Integer.valueOf(request.params("artCo")));
-            if("likeA".equals(mode))
-            {
+            String mode = request.params("like");
+            Articulo art = ArticuloQueries.getInstancia().find(Long.valueOf(request.params("art")));
+
+            //elim viejo like
+            ArticuloQueries.getInstancia().flush(art.getId(), (Usuario)sesion.attribute("currentUser"));
+
+            if("likeA".equals(mode)) {
                 LikeA like = new LikeA(true,art,(Usuario)sesion.attribute("currentUser"));
                 LikeAQueries.getInstancia().crear(like);
                 art.addLikeA(like);
+                like.setArticulo(art);
+
 
             }
-            else if ("dislikeA".equals(mode))
-            {
+            else if ("dislikeA".equals(mode)) {
+
                 LikeA like = new LikeA(false,art,(Usuario)sesion.attribute("currentUser"));
                 LikeAQueries.getInstancia().crear(like);
                 art.addLikeA(like);
+                like.setArticulo(art);
 
             }
-            else if("likeC".equals(mode))
-            {
+
+            response.redirect("/articulos?id="+art.getId());
+
+            return null;
+        }, freeMarkerEngine);
+
+
+        get("/articulos/:art/:co/:like", (request, response) -> {
+            Session sesion = request.session(true);
+            String mode = request.params("like");
+            Articulo art = ArticuloQueries.getInstancia().find(Long.valueOf(request.params("art")));
+            Comentario comentario = ComentarioQueries.getInstancia().find(Integer.valueOf(request.params("co")));
+
+            ComentarioQueries.getInstancia().flush(comentario.getId(), (Usuario)sesion.attribute("currentUser"));
+            if("likeC".equals(mode)) {
                 LikeC like = new LikeC(true,comentario,(Usuario)sesion.attribute("currentUser"));
                 LikeCQueries.getInstancia().crear(like);
                 comentario.addLikeC(like);
 
             }
-            else  if("dislikeC".equals(mode))
-            {
+            else  if("dislikeC".equals(mode)) {
                 LikeC like = new LikeC(false,comentario,(Usuario)sesion.attribute("currentUser"));
                 LikeCQueries.getInstancia().crear(like);
                 comentario.addLikeC(like);
@@ -530,4 +552,5 @@ public class Main {
     {
         return java.lang.Math.ceil(  ((double)size)/ 5 );
     }
+
 }

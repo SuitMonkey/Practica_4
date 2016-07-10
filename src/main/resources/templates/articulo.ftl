@@ -60,17 +60,17 @@
         });
 
 
-/*        $(function () {
-            $(".like").click(function () {
-                var input = $(this).find('.qty1');
-                input.val(parseInt(input.val())+ 1);
+        /*        $(function () {
+                    $(".like").click(function () {
+                        var input = $(this).find('.qty1');
+                        input.val(parseInt(input.val())+ 1);
 
-            });
-            $(".dislike").click(function () {
-                var input = $(this).find('.qty2');
-                input.val(input.val() - 1);
-            });
-        });*/
+                    });
+                    $(".dislike").click(function () {
+                        var input = $(this).find('.qty2');
+                        input.val(input.val() - 1);
+                    });
+                });*/
 
     </script>
 
@@ -152,193 +152,211 @@
             <img class="img-responsive" src="http://www.caregivingclub.com/wp-content/uploads/2011/03/sunset-and-light-bulb-LG-900x300.jpg" alt="">
 
             <hr>
-            <div class="container">
-                <#if sesion??>
-                    <#if dioLike??>
-                        <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
-                            Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
-                        </ta>
-                        <a class="dislike" href = "/articulos/${id}/likeA"><i class="fa fa-thumbs-o-down"></i>
-                            Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
-                        </a>
-                    </#if>
-
-                    <#if dioDisLike??>
-                        <a class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
-                            Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
-                        </a>
-                        <ta class="dislike" href = "/articulos/${id}/dislikeA"><i class="fa fa-thumbs-o-down"></i>
-                            Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
-                        </ta>
-                    </#if>
-
-                    <#if aunNada??>
-                        <a class="like" href = "/articulos/${id}/likeA" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
-                            Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
-                        </a>
-                        <a class="dislike" href = "/articulos/${id}/dislikeA"><i class="fa fa-thumbs-o-down"></i>
-                            Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
-                        </a>
-                    </#if>
-
-                </div>
-
+        <div class="container">
+        <#if sesion??>
+            <#if sesion != "false">
+                <#if dioLike??>
+                    <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
+                    </ta>
+                    <a class="dislike" href = "/articulos/${id}/dislikeA"><i class="fa fa-thumbs-o-down"></i>
+                        Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
+                    </a>
                 </#if>
-            <hr>
+                <#if dioDisLike??>
+                    <a class="like"  href = "/articulos/${id}/likeA" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
+                    </a>
+                    <ta class="dislike" href = "/articulos/${id}/dislikeA"><i class="fa fa-thumbs-o-down"></i>
+                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
+                </ta>
+                </#if>
 
-            <!-- Post Content -->
-            <p class="lead">${articulo.getCuerpo()}</p>
-            <!--  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
-  -->
-            <hr>
-
-            <!-- Blog Comments -->
-
-            <!-- Comments Form -->
-            <div class = "hacerComentario" >
-                <div class="well">
-                    <h4>Deja tu Comentario:</h4>
-                    <form role="form" action="/articulos" method="post">
-                        <div class="form-group">
-                            <textarea class="form-control" name="comentario" rows="3"></textarea>
-                        </div><input type="hidden" name="idArticulo" value="${id}">
-                        <input type="submit" class="btn btn-primary" value = "Comentar!"></input>
-                    </form>
-                </div>
-            </div>
-
-            <hr>
+                <#if aunNada??>
+                    <a class="like" href = "/articulos/${id}/likeA" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
+                    </a>
+                    <a class="dislike" href = "/articulos/${id}/dislikeA"><i class="fa fa-thumbs-o-down"></i>
+                        Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
+                    </a>
+                </#if>
 
 
-            <!-- Area para agregar articulo -->
-            <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="loginmodal-container">
-                        <h1>Editando Articulo</h1><br>
-                        <form action="/articulos" method="post">
-                            <input type = "hidden" name = "editarArt" value = "true">
-                            <input type = "hidden" name = "idArt" value = ${articulo.getId()}>
-                            <input type="text" name="titulo" value="${articulo.getTitulo()}">
-                            <textarea type="text-area" style="height: 150px;" class="form-control" row="4" name="area-articulo" >${articulo.getCuerpo()}</textarea>
-                            <br>
+            <#else>
+                <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLA}" />
+                </ta>
+                <ta class="dislike" ><i class="fa fa-thumbs-o-down"></i>
+                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDA}" />
+                </ta>
+            </#if>
+        </#if>
+        </div>
 
-                            <textarea type="tags-area" style="height: 50px;" class="form-control" row="4" name="area-etiqueta" ><#list etiquetas as etiqs>${etiqs.getEtiqueta()}, </#list></textarea>
-                            <br>
-                            <input type="submit" name="login" class="login loginmodal-submit" value="Aceptar">
-                        </form>
 
-                    </div>
-                </div>
-            </div>
+        <hr>
 
-            <!-- Comment -->
+        <!-- Post Content -->
+        <p class="lead">${articulo.getCuerpo()}</p>
+        <!--  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
+-->
+        <hr>
+
+        <!-- Blog Comments -->
+
+        <!-- Comments Form -->
+        <div class = "hacerComentario" >
             <div class="well">
-            <#list comentarios as coment>
-                <div class="media">
-                    <div class="media-body">
-                        <h4 class="media-heading">${coment.getAutor().getUsername()}</h4>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="2" readonly> ${coment.getComentario()} </textarea>
-                        </div>
-                        <div class="elimComent">
-                            <form action="/articulos" method="post" >
-                                <input type ="hidden" name = "eliminarComentarioV"value = "${coment.getId()}"></input>
-                                <input type="hidden" name="idArticulo" value="${id}">
-                                <input name = "eliminarComentario" type="submit" class="btn btn-danger" value = "Eliminar"></input>
-                            </form>
-                        </div>
-                        <div class="container">
-                            <#if sesion??>
-                                <#if coment.isLikeUsuario(user.getUsername()) == "Like"></#if>
+                <h4>Deja tu Comentario:</h4>
+                <form role="form" action="/articulos" method="post">
+                    <div class="form-group">
+                        <textarea class="form-control" name="comentario" rows="3"></textarea>
+                    </div><input type="hidden" name="idArticulo" value="${id}">
+                    <input type="submit" class="btn btn-primary" value = "Comentar!"></input>
+                </form>
+            </div>
+        </div>
 
-                                <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
-                                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${coment.getLikes().size()}" />
-                                </ta>
+        <hr>
 
-                                <a class="dislike" href = "/articulos/${id}/disLikeC"><i class="fa fa-thumbs-o-down"></i>
-                                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${coment.getLikes().size()}" />
-                                </a>
 
-                                <#if coment.isLikeUsuario(user.getUsername()) == "disLike"></#if>
-                                <a class="like" href = "/articulos/${id}/likeC"style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
-                                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLC}" />
-                                </a>
+        <!-- Area para agregar articulo -->
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="loginmodal-container">
+                    <h1>Editando Articulo</h1><br>
+                    <form action="/articulos" method="post">
+                        <input type = "hidden" name = "editarArt" value = "true">
+                        <input type = "hidden" name = "idArt" value = ${articulo.getId()}>
+                        <input type="text" name="titulo" value="${articulo.getTitulo()}">
+                        <textarea type="text-area" style="height: 150px;" class="form-control" row="4" name="area-articulo" >${articulo.getCuerpo()}</textarea>
+                        <br>
 
-                                <ta class="dislike" ><i class="fa fa-thumbs-o-down"></i>
-                                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDC}" />
-                                </ta>
+                        <textarea type="tags-area" style="height: 50px;" class="form-control" row="4" name="area-etiqueta" ><#list etiquetas as etiqs>${etiqs.getEtiqueta()}, </#list></textarea>
+                        <br>
+                        <input type="submit" name="login" class="login loginmodal-submit" value="Aceptar">
+                    </form>
 
-                                <#if coment.isLikeUsuario(user.getUsername()) == "noLike">
-                                    <a class="like" href = "/articulos/${id}/likeC" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
-                                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${totalLC}" />
-                                    </a>
-                                    <a class="dislike" href = "/articulos/${id}/disLikeC"><i class="fa fa-thumbs-o-down"></i>
-                                        Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${totalDC}" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="well">
+        <#list comentarios as coment>
+            <div class="media">
+                <div class="media-body">
+                    <h4 class="media-heading">${coment.getAutor().getUsername()}</h4>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="2" readonly> ${coment.getComentario()} </textarea>
+                    </div>
+                    <div class="elimComent">
+                        <form action="/articulos" method="post" >
+                            <input type ="hidden" name = "eliminarComentarioV"value = "${coment.getId()}"></input>
+                            <input type="hidden" name="idArticulo" value="${id}">
+                            <input name = "eliminarComentario" type="submit" class="btn btn-danger" value = "Eliminar"></input>
+                        </form>
+                    </div>
+                    <div class="container">
+                        <#if sesion??>
+                            <#if sesion != "false">
+                                <#if coment.isLikeUsuario(user) == "Like">
+                                    <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${coment.getGoodLikes()}" />
+                                    </ta>
+
+                                    <a class="dislike" href = "/articulos/${id}/${coment.getId()}/dislikeC"><i class="fa fa-thumbs-o-down"></i>
+                                        Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${coment.getLikes()?size - coment.getGoodLikes()}" />
                                     </a>
                                 </#if>
+                                <#if coment.isLikeUsuario(user) == "disLike">
+                                    <a class="like" href = "/articulos/${id}/${coment.getId()}/likeC"style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${coment.getGoodLikes()}" />
+                                    </a>
+
+                                    <ta class="dislike" ><i class="fa fa-thumbs-o-down"></i>
+                                        Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${coment.getLikes()?size - coment.getGoodLikes()}" />
+                                    </ta>
+                                </#if>
+
+                                <#if coment.isLikeUsuario(user) == "noLike">
+                                    <a class="like" href = "/articulos/${id}/${coment.getId()}/likeC" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                                        Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${coment.getGoodLikes()}" />
+                                    </a>
+                                    <a class="dislike" href = "/articulos/${id}/${coment.getId()}/dislikeC"><i class="fa fa-thumbs-o-down"></i>
+                                        Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${coment.getLikes()?size - coment.getGoodLikes()}" />
+                                    </a>
+                                </#if>
+                            <#else >
+                                <ta class="like" style='margin-left: 15em; font-size: 15px;'><i class="fa fa-thumbs-o-up"></i>
+                                    Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="${coment.getGoodLikes()}" />
+                                </ta>
+                                <ta class="dislike" ><i class="fa fa-thumbs-o-down"></i>
+                                    Dislike <input class="qty2"  name="qty2" readonly="readonly" type="text" value="${coment.getLikes()?size - coment.getGoodLikes()}" />
+                                </ta>
 
                             </#if>
 
-                        </div>
-
+                        </#if>
                     </div>
                 </div>
-            </#list>
             </div>
-
+        </#list>
         </div>
 
-        <!-- Blog Sidebar Widgets Column -->
-        <div class="col-md-4">
+    </div>
 
-            <!-- Blog Search Well -->
-            <div class="well">
-                <h4>Blog Search</h4>
-                <div class="input-group">
-                    <input type="text" class="form-control">
+    <!-- Blog Sidebar Widgets Column -->
+    <div class="col-md-4">
+
+        <!-- Blog Search Well -->
+        <div class="well">
+            <h4>Blog Search</h4>
+            <div class="input-group">
+                <input type="text" class="form-control">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button">
                                 <span class="glyphicon glyphicon-search"></span>
                         </button>
                         </span>
-                </div>
-                <!-- /.input-group -->
             </div>
-
-            <!-- Blog Categories Well -->
-
-            <div class="well">
-                <h4>Blog Categories</h4>
-                <div class="row">
-                <#list etiquetas as etiqueta>
-                    <div class="col-lg-6">
-                        <ul class="list-unstyled">
-                            <li style="color: #1b6d85;font-size: 15px;">${etiqueta.getEtiqueta()}</li>
-                        </ul>
-                    </div>
-                </#list>
-                </div>
-                <!-- /.row -->
-            </div>
+            <!-- /.input-group -->
         </div>
 
+        <!-- Blog Categories Well -->
+
+        <div class="well">
+            <h4>Blog Categories</h4>
+            <div class="row">
+            <#list etiquetas as etiqueta>
+                <div class="col-lg-6">
+                    <ul class="list-unstyled">
+                        <li style="color: #1b6d85;font-size: 15px;">${etiqueta.getEtiqueta()}</li>
+                    </ul>
+                </div>
+            </#list>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+
+</div>
+<!-- /.row -->
+
+<hr>
+
+<!-- Footer -->
+<footer>
+    <div class="row">
+        <div class="col-lg-12">
+            <p>Copyright &copy; Ernesto y Francis 2016</p>
+        </div>
     </div>
     <!-- /.row -->
-
-    <hr>
-
-    <!-- Footer -->
-    <footer>
-        <div class="row">
-            <div class="col-lg-12">
-                <p>Copyright &copy; Ernesto y Francis 2016</p>
-            </div>
-        </div>
-        <!-- /.row -->
-    </footer>
+</footer>
 
 </div>
 <!-- /.container -->

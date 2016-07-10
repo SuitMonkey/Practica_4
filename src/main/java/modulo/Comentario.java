@@ -1,5 +1,8 @@
 package modulo;
 
+import servicios.LikeAQueries;
+import servicios.LikeCQueries;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -17,7 +20,7 @@ public class Comentario implements Serializable{
     private Usuario autor;
     @ManyToOne
     private Articulo articulo;
-    @OneToMany(mappedBy = "Coment")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "Coment")
     private List<LikeC> likes;
 
     public Comentario() {
@@ -107,5 +110,6 @@ public class Comentario implements Serializable{
         }
         return sum;
     }
+
 
 }
