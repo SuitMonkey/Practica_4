@@ -1,5 +1,6 @@
 package modulo;
 
+import servicios.ArticuloQueries;
 import servicios.LikeAQueries;
 
 import javax.persistence.*;
@@ -22,18 +23,17 @@ public class Articulo implements Serializable{
     private long id;
     @Column(length = 1000)
     private String titulo;
-    @Column(length = 1000)
+    @Column(length = 8000)
     private String cuerpo;
     @ManyToOne
     private Usuario autor;
     @OrderBy
     private Date fecha;
-    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comentario> listaComentario;
-    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,  cascade = CascadeType.ALL)
     private List<Etiqueta> listaEtiqueta;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo",orphanRemoval = true)
-
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo",cascade = CascadeType.ALL)
     private List<LikeA> likes;
 
     public Articulo(){
@@ -127,6 +127,7 @@ public class Articulo implements Serializable{
         this.likes.add(like);
         if (like.getArticulo() != this) {
             like.setArticulo(this);
+            //ArticuloQueries.getInstancia().editar(this);
         }
     }
 

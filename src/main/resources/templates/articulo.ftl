@@ -139,7 +139,6 @@
                 <span class="glyphicon glyphicon-time"></span>  Publicado en ${articulo.getFecha()}
                 <input type = "hidden" name = "eliminarArt" value = "true">
                 <div class = "editElim">
-
                     <a href="#" data-toggle="modal" data-target="#login-modal" style='margin-left: 20em; font-size: 15px;'>Editar</a>
                     <button class="btn btn-link" style='margin-left: 5em; font-size: 15px;' name="elim" value="${articulo.getId()}">Eliminar</button>
                 </div>
@@ -230,7 +229,7 @@
                     <h1>Editando Articulo</h1><br>
                     <form action="/articulos" method="post">
                         <input type = "hidden" name = "editarArt" value = "true">
-                        <input type = "hidden" name = "idArt" value = ${articulo.getId()}>
+                        <input type = "hidden" name = "idArticulo" value = ${articulo.getId()}>
                         <input type="text" name="titulo" value="${articulo.getTitulo()}">
                         <textarea type="text-area" style="height: 150px;" class="form-control" row="4" name="area-articulo" >${articulo.getCuerpo()}</textarea>
                         <br>

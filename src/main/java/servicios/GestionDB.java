@@ -70,8 +70,10 @@ public class GestionDB<T> {
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
         try {
+
             T entidad = em.find(claseEntidad, entidadId);
-            em.remove(entidad);
+            em.remove(em.contains(entidad)? entidad : em.merge(entidad));
+            //System.out.println();
             em.getTransaction().commit();
         }catch (Exception ex){
             em.getTransaction().rollback();

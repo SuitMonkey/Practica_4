@@ -1,9 +1,6 @@
 package servicios;
 
-import modulo.Articulo;
-import modulo.Etiqueta;
-import modulo.LikeA;
-import modulo.Usuario;
+import modulo.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -41,7 +38,7 @@ public class ArticuloQueries extends GestionDB<Articulo> {
             Articulo art = em.find(Articulo.class,Id);
 
             for (Etiqueta it : le) {
-                Etiqueta e = em.find(Etiqueta.class,it.getEtiqueta());
+                Etiqueta e = em.find(Etiqueta.class,it.getId());
                 e.setArticulo(art);
                 art.addEtiqueta(e);
 
@@ -89,7 +86,7 @@ public class ArticuloQueries extends GestionDB<Articulo> {
                     break;
                 }
             }
-        em.getTransaction().commit();
+            em.getTransaction().commit();
 
         }catch (Exception ex){
             em.getTransaction().rollback();
@@ -100,4 +97,46 @@ public class ArticuloQueries extends GestionDB<Articulo> {
 
     }
 
+    public void delete(Long id){
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        try {
+            Articulo entidad = em.find(Articulo.class, id);
+            em.remove(entidad);
+            //em.clear();
+            em.getTransaction().commit();
+        }catch (Exception ex){
+            em.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            em.close();
+        }
+
+    }
+
+    public void unlinkComent(Long idA, int idC)
+    {
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        try {
+            Articulo articulo = em.find(Articulo.class, idA);
+            List<Comentario> lc = articulo.getListaComentario();
+            for(Comentario c: lc)
+            {
+                if(c.getId() == idC)
+                {
+                    System.out.println(lc.remove(c));
+                    break;
+                }
+
+            }
+            em.getTransaction().commit();
+        }catch (Exception ex){
+            em.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            em.close();
+        }
+
+    }
 }

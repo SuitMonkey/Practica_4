@@ -50,4 +50,6 @@ public class ComentarioQueries extends GestionDB<Comentario> {
     }
 
 
+
+
 }

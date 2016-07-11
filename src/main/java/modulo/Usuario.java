@@ -16,11 +16,11 @@ public class Usuario implements Serializable{
     private String password;
     private boolean Administrador;
     private boolean autor;
-    @OneToMany(mappedBy = "autor")
+    @OneToMany(  mappedBy = "autor",cascade = CascadeType.ALL)
     private List<Articulo> articulos;
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<LikeA> likesA;
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<LikeC> likesC;
 
     public Usuario(){

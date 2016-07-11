@@ -24,8 +24,16 @@ public class Main {
 
         enableDebugScreen();
         //Forces
-//        UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
-  //      UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
+
+      try{
+          UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
+      }catch(Exception e)
+      {
+
+      }
+      //  UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
+
+
 
 
         Configuration configuration = new Configuration();
@@ -35,6 +43,11 @@ public class Main {
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
+            //--------------------------------------------------------
+            session.attribute("sesion", true);
+            session.attribute("currentUser", UsuarioQueries.getInstancia().find("er12"));
+            //----------------------------------------------------------
+
             Boolean usuario = session.attribute("sesion");
             attributes.put("user",(session.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) session.attribute("currentUser")));
 
@@ -200,19 +213,13 @@ public class Main {
             Session sesion = request.session(true);
             Map<String, Object> attributes = new HashMap<>();
 
-            attributes.put("sesion",((Boolean)request.session().attribute("sesion")).toString());
-            attributes.put("user",(sesion.attribute("currentUser")==null)?new Usuario("","","",false):((Usuario) sesion.attribute("currentUser")));
-
-            int pagina = 1;
-
             String busqueda = request.queryParams("busqueda");
             if(busqueda != null) {
                 Etiqueta etiq = EtiquetaQueries.getInstancia().find(busqueda);
                 if(etiq != null){
                     //TODO:arreglar etiquetas de articulos: estan vacias y si se busca se va a log in
                     response.redirect("/tags/"+etiq.getEtiqueta()+"/page/1");
-                    //List<Articulo> articulos = ArticuloQueries.getInstancia().findAllByTagsSorted(etiq);
-                    //attributes.put("articulos",articulos);
+
                 }
                 else attributes.put("EtiqNotFound","Etiqueta no encontrada.");
 
@@ -232,7 +239,7 @@ public class Main {
                     EtiquetaQueries.getInstancia().crear(new Etiqueta(eti));
                 }
                 Usuario user =sesion.attribute("currentUser");
-                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), null, etiq,new ArrayList<LikeA>());
+                Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), new ArrayList<Comentario>(), etiq,new ArrayList<LikeA>());
                 ArticuloQueries.getInstancia().crear(art);
                 ArticuloQueries.getInstancia().crearEsp(art.getId(),etiq);
 
@@ -241,40 +248,21 @@ public class Main {
                 if (elimArt != null)
                 {
                     Long elim = Long.parseLong(request.queryParams("elim"));
-                    ArticuloQueries.getInstancia().eliminar(elim);
+                    ArticuloQueries.getInstancia().delete(elim);
 
                     //System.out.println(elim);
                 //    bd.eliminarArticulo(elim);
                 }
             }
-            List<Articulo> articulos = paginacion((List<Articulo>)ArticuloQueries.getInstancia().findAllSorted(),pagina);
-            attributes.put("articulos",articulos);
 
+            response.redirect("/");
 
-            //paginacion
-
-            int [] paginas = new int [(int)getCantPag(ArticuloQueries.getInstancia().findAllSorted().size())];
-            for(int i = 1 ;i <= paginas.length;i++) {
-                if(pagina== i)
-                    continue;
-                paginas[i-1]= i;
-            }
-
-            attributes.put("irAdelante","si");
-            attributes.put("paginaActual","1");
-            attributes.put("paginas",paginas);
-
-            return new ModelAndView(attributes, "home.ftl");
+            return null;
         }, freeMarkerEngine);
 
         get("/articulos", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session sesion = request.session(true);
-            //--------------------------------------------------------
-            sesion.attribute("sesion", true);
-            sesion.attribute("currentUser", UsuarioQueries.getInstancia().find("er12"));
-            //----------------------------------------------------------
-
 
             attributes.put("sesion",(sesion.attribute("sesion")==null)?"false":sesion.attribute("sesion").toString());
 
@@ -332,19 +320,12 @@ public class Main {
             //---------------------------
 
 
-
             return new ModelAndView(attributes, "articulo.ftl");
         }, freeMarkerEngine);
 
         post("/articulos", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             Session sesion = request.session(true);
-            attributes.put("sesion","true");
-
-            attributes.put("user",(sesion.attribute("currentUser")==null)?"false":((Usuario) sesion.attribute("currentUser")));
-
-            attributes.put("LikesA", LikeAQueries.getInstancia().findAll());
-            attributes.put("LikesC", LikeCQueries.getInstancia().findAll());
 
             String editarArt = null;
             editarArt = (request.queryParams("editarArt")==null)?"null": "nonull";
@@ -356,19 +337,22 @@ public class Main {
                 String titulo = request.queryParams("titulo");
                 String texto = request.queryParams("area-articulo");
                 String etiquetas = request.queryParams("area-etiqueta");
-                int idArt = Integer.parseInt(request.queryParams("idArt"));
+                //int idArt = Integer.parseInt(request.queryParams("idArt"));
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
                     etiq.add(new Etiqueta(eti));
-                    //System.out.println(eti);
                 }
                 Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), new ArrayList<Comentario>(), etiq, new ArrayList<LikeA>());
+                art.setId(id);
+                ArticuloQueries.getInstancia().editar(art);
                 //System.out.println(art.getId()+ " "+art.getTitulo());
                 //bd.actualizarArticulo(art);
             }
             else{
                 if(elimC!=null) {
-                    ComentarioQueries.getInstancia().eliminar(Integer.valueOf(request.queryParams("eliminarComentarioV")));
+                    int idC =Integer.valueOf(request.queryParams("eliminarComentarioV"));
+                   // ArticuloQueries.getInstancia().unlinkComent(id,idC);
+                    ComentarioQueries.getInstancia().eliminar(idC);
                 }
                 else {
                     if (comen != null || !comen.equals("")) {
@@ -378,12 +362,9 @@ public class Main {
                 }
             }
 
+            response.redirect("/articulos?id="+id);
 
-            Articulo articulo = ArticuloQueries.getInstancia().find(id);
-            attributes.put("comentarios",articulo.getListaComentario());
-            response.redirect("/articulos?id="+articulo.getId());
-
-            return new ModelAndView(attributes, "articulo.ftl");
+            return null;
         }, freeMarkerEngine);
 
         get("/articulos/:art/:like", (request, response) -> {
