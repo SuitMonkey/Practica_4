@@ -1,7 +1,6 @@
 package servicios;
 
 import modulo.LikeA;
-import modulo.Usuario;
 
 /**
  * Created by Ernesto on 19-Jun-16.

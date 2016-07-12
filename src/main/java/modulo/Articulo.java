@@ -29,9 +29,9 @@ public class Articulo implements Serializable{
     private Usuario autor;
     @OrderBy
     private Date fecha;
-    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Comentario> listaComentario;
-    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,  cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Etiqueta> listaEtiqueta;
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo",cascade = CascadeType.ALL)
     private List<LikeA> likes;
@@ -47,10 +47,7 @@ public class Articulo implements Serializable{
         //this.fecha = fecha;
         this.listaComentario = listaComentario;
         this.listaEtiqueta = new ArrayList<>();
-        for(Etiqueta e : listaEtiqueta)
-        {
-            addEtiqueta(e);
-        }
+
         this.likes = likes;
 
         fecha = new Date();

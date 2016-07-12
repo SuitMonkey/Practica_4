@@ -81,8 +81,8 @@ public class ArticuloQueries extends GestionDB<Articulo> {
                 if( la.getUsuario().getUsername().equals(usuario.getUsername()))
                 {
                     LikeAQueries.getInstancia().eliminar(la.getId());
-                    usuario.getLikesA().remove(la);
-                    //likes.remove(la);
+                   // usuario.getLikesA().remove(la);//NO SE ESTA REMOVIENDO!!!!
+
                     break;
                 }
             }

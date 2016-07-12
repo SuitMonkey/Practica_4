@@ -14,7 +14,7 @@ class Etiqueta implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String etiqueta;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Articulo articulo;
 
     public Etiqueta(){}

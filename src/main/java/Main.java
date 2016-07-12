@@ -26,7 +26,7 @@ public class Main {
         //Forces
 
       try{
-          UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
+        //  UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
       }catch(Exception e)
       {
 
@@ -241,14 +241,14 @@ public class Main {
                 Usuario user =sesion.attribute("currentUser");
                 Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), new ArrayList<Comentario>(), etiq,new ArrayList<LikeA>());
                 ArticuloQueries.getInstancia().crear(art);
-                ArticuloQueries.getInstancia().crearEsp(art.getId(),etiq);
+               // ArticuloQueries.getInstancia().crearEsp(art.getId(),etiq);
 
             }
             else {
                 if (elimArt != null)
                 {
                     Long elim = Long.parseLong(request.queryParams("elim"));
-                    ArticuloQueries.getInstancia().delete(elim);
+                    ArticuloQueries.getInstancia().eliminar(elim);
 
                     //System.out.println(elim);
                 //    bd.eliminarArticulo(elim);
@@ -378,8 +378,8 @@ public class Main {
             if("likeA".equals(mode)) {
                 LikeA like = new LikeA(true,art,(Usuario)sesion.attribute("currentUser"));
                 LikeAQueries.getInstancia().crear(like);
-                art.addLikeA(like);
-                like.setArticulo(art);
+               // art.addLikeA(like);
+                //like.setArticulo(art);
 
 
             }
@@ -387,8 +387,8 @@ public class Main {
 
                 LikeA like = new LikeA(false,art,(Usuario)sesion.attribute("currentUser"));
                 LikeAQueries.getInstancia().crear(like);
-                art.addLikeA(like);
-                like.setArticulo(art);
+                //art.addLikeA(like);
+                //like.setArticulo(art);
 
             }
 
