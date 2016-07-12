@@ -29,11 +29,11 @@ public class Articulo implements Serializable{
     private Usuario autor;
     @OrderBy
     private Date fecha;
-    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,cascade = CascadeType.REMOVE)
     private List<Comentario> listaComentario;
-    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articulo",fetch=FetchType.EAGER,cascade = CascadeType.REMOVE)
     private List<Etiqueta> listaEtiqueta;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "articulo",cascade = CascadeType.REMOVE)
     private List<LikeA> likes;
 
     public Articulo(){
@@ -155,5 +155,19 @@ public class Articulo implements Serializable{
         }
         return false;
     }
+    public int getTHeLike(Usuario usuario)
+    {
+        for(LikeA la : likes) {
+            if( la.getUsuario().getUsername().equals(usuario.getUsername())) {
+                int dummy =la.getId();
+                likes.clear();
+                return dummy;
+            }
+        }
+
+        return -1;
+
+    }
+
 
 }

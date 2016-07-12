@@ -16,11 +16,13 @@ public class Usuario implements Serializable{
     private String password;
     private boolean Administrador;
     private boolean autor;
-    @OneToMany(  mappedBy = "autor",cascade = CascadeType.ALL)
+    @OneToMany(  mappedBy = "autor" )
     private List<Articulo> articulos;
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(  mappedBy = "autor" )
+    private List<Comentario> comentarios;
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,orphanRemoval = true)
     private List<LikeA> likesA;
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,orphanRemoval = true)
     private List<LikeC> likesC;
 
     public Usuario(){
@@ -117,5 +119,13 @@ public class Usuario implements Serializable{
         if (la.getUsuario() != this) {
             la.setUsuario(this);
         }
+    }
+
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
     }
 }

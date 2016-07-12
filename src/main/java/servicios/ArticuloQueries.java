@@ -4,6 +4,7 @@ import modulo.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -69,33 +70,6 @@ public class ArticuloQueries extends GestionDB<Articulo> {
         List<Articulo> la = query.setParameter("tag", tag).getResultList();
         return la;
     }
-    public void flush(Long Id, Usuario usuario)
-    {
-        EntityManager em = getEntityManager();
-        em.getTransaction().begin();
-        try {
-            int idLike=0;
-            Articulo art = em.find(Articulo.class,Id);
-            for(LikeA la : art.getLikes())
-            {
-                if( la.getUsuario().getUsername().equals(usuario.getUsername()))
-                {
-                    LikeAQueries.getInstancia().eliminar(la.getId());
-                   // usuario.getLikesA().remove(la);//NO SE ESTA REMOVIENDO!!!!
-
-                    break;
-                }
-            }
-            em.getTransaction().commit();
-
-        }catch (Exception ex){
-            em.getTransaction().rollback();
-            ex.printStackTrace();
-        } finally {
-            em.close();
-        }
-
-    }
 
     public void delete(Long id){
         EntityManager em = getEntityManager();
@@ -114,18 +88,27 @@ public class ArticuloQueries extends GestionDB<Articulo> {
 
     }
 
-    public void unlinkComent(Long idA, int idC)
+    public void unlinkLike(Long idA, int idL)
     {
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
         try {
             Articulo articulo = em.find(Articulo.class, idA);
-            List<Comentario> lc = articulo.getListaComentario();
-            for(Comentario c: lc)
+            //List<LikeA> LA = articulo.getLikes();
+/*
+            for (Iterator<LikeA> iterator = articulo.getLikes().iterator(); iterator.hasNext(); ) {
+                LikeA child = iterator.next();
+                em.remove( child );
+                iterator.remove();
+            }
+            em.merge( articulo );*/
+            for(LikeA la: articulo.getLikes())
             {
-                if(c.getId() == idC)
+                if(la.getId() == idL)
                 {
-                    System.out.println(lc.remove(c));
+                    articulo.getLikes().clear();
+                    LikeAQueries.getInstancia().eliminar(la.getId());
+                    System.out.println(articulo.getLikes().remove(la));
                     break;
                 }
 

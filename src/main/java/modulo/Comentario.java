@@ -20,14 +20,19 @@ public class Comentario implements Serializable{
     private Usuario autor;
     @ManyToOne
     private Articulo articulo;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "Coment",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "Coment",cascade = CascadeType.REMOVE)
     private List<LikeC> likes;
 
     public Comentario() {
 
     }
 
-    public Comentario( String comentario, Usuario autor, Articulo articulo, List<LikeC> likes) {
+    public Comentario(String comentario, Usuario autor) {
+        this.comentario = comentario;
+        this.autor = autor;
+    }
+
+    public Comentario(String comentario, Usuario autor, Articulo articulo, List<LikeC> likes) {
         this.comentario = comentario;
         this.autor = autor;
         this.articulo = articulo;

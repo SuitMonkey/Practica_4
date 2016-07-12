@@ -357,6 +357,9 @@ public class Main {
                 else {
                     if (comen != null || !comen.equals("")) {
                         Comentario com = new Comentario(comen, ((Usuario)sesion.attribute("currentUser")), ((Articulo)ArticuloQueries.getInstancia().find(id)), new ArrayList<LikeC>());
+                      //  Articulo articulo = ArticuloQueries.getInstancia().find(id);
+                       // articulo.getListaComentario().add(com);
+                      //  ArticuloQueries.getInstancia().editar(articulo);
                         ComentarioQueries.getInstancia().crear(com);
                     }
                 }
@@ -373,12 +376,19 @@ public class Main {
             Articulo art = ArticuloQueries.getInstancia().find(Long.valueOf(request.params("art")));
 
             //elim viejo like
-            ArticuloQueries.getInstancia().flush(art.getId(), (Usuario)sesion.attribute("currentUser"));
+            int idLike = (art.getTHeLike((Usuario)sesion.attribute("currentUser")));
+
+            if(idLike!=-1){
+             ArticuloQueries.getInstancia().unlinkLike(art.getId(),idLike);
+
+            }
 
             if("likeA".equals(mode)) {
                 LikeA like = new LikeA(true,art,(Usuario)sesion.attribute("currentUser"));
-                LikeAQueries.getInstancia().crear(like);
+                art.getLikes().add(like);
+               // ArticuloQueries.getInstancia().editar(art);
                // art.addLikeA(like);
+                LikeAQueries.getInstancia().crear(like);
                 //like.setArticulo(art);
 
 
@@ -386,6 +396,8 @@ public class Main {
             else if ("dislikeA".equals(mode)) {
 
                 LikeA like = new LikeA(false,art,(Usuario)sesion.attribute("currentUser"));
+                art.getLikes().add(like);
+                //ArticuloQueries.getInstancia().editar(art);
                 LikeAQueries.getInstancia().crear(like);
                 //art.addLikeA(like);
                 //like.setArticulo(art);
@@ -408,13 +420,13 @@ public class Main {
             if("likeC".equals(mode)) {
                 LikeC like = new LikeC(true,comentario,(Usuario)sesion.attribute("currentUser"));
                 LikeCQueries.getInstancia().crear(like);
-                comentario.addLikeC(like);
+               // comentario.addLikeC(like);
 
             }
             else  if("dislikeC".equals(mode)) {
                 LikeC like = new LikeC(false,comentario,(Usuario)sesion.attribute("currentUser"));
                 LikeCQueries.getInstancia().crear(like);
-                comentario.addLikeC(like);
+               // comentario.addLikeC(like);
             }
 
             response.redirect("/articulos?id="+art.getId());
