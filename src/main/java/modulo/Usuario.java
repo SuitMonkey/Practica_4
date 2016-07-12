@@ -16,13 +16,13 @@ public class Usuario implements Serializable{
     private String password;
     private boolean Administrador;
     private boolean autor;
-    @OneToMany(  mappedBy = "autor" )
+    @OneToMany(  mappedBy = "autor" ,cascade = CascadeType.REMOVE)
     private List<Articulo> articulos;
-    @OneToMany(  mappedBy = "autor" )
+    @OneToMany(  mappedBy = "autor" ,cascade = CascadeType.REMOVE)
     private List<Comentario> comentarios;
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,orphanRemoval = true,cascade = CascadeType.REMOVE)
     private List<LikeA> likesA;
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER,orphanRemoval = true,cascade = CascadeType.REMOVE)
     private List<LikeC> likesC;
 
     public Usuario(){
