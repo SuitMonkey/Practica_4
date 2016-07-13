@@ -25,13 +25,8 @@ public class Main {
         enableDebugScreen();
         //Forces
 
-      try{
-        //  UsuarioQueries.getInstancia().crear(new Usuario("er12","Ernesto Rodríguez","1234",true));
-      }catch(Exception e)
-      {
-
-      }
-      //  UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
+        try{UsuarioQueries.getInstancia().find("er12");}catch(Exception e) {}
+        //  UsuarioQueries.getInstancia().crear(new Usuario("yiyi","Djidjelly Siclait","1234",true));
 
 
 
@@ -44,8 +39,8 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             Session session = request.session(true);
             //--------------------------------------------------------
-            session.attribute("sesion", true);
-            session.attribute("currentUser", UsuarioQueries.getInstancia().find("er12"));
+            //session.attribute("sesion", true);
+            //session.attribute("currentUser", UsuarioQueries.getInstancia().find("er12"));
             //----------------------------------------------------------
 
             Boolean usuario = session.attribute("sesion");
@@ -108,7 +103,7 @@ public class Main {
 
             if(admin!=null) {
                 if(admin) {
-                       attributes.put("greetings","Saludos Administardor.");
+                    attributes.put("greetings","Saludos Administardor.");
                     attributes.put("sesion","true");
                 }
             }
@@ -164,7 +159,6 @@ public class Main {
 
             if(admin!=null) {
                 if(admin) {
-                    attributes.put("greetings","Saludos Administardor.");
                     attributes.put("sesion","true");
                 }
             }
@@ -178,8 +172,8 @@ public class Main {
             }
 
             String tag = request.params("tag");
-            Etiqueta etiq = EtiquetaQueries.getInstancia().find(tag);
-            List<Articulo> articulos = paginacion(ArticuloQueries.getInstancia().findAllByTagsSorted(etiq),pagina);
+            //Etiqueta etiq = EtiquetaQueries.getInstancia().find(tag);
+            List<Articulo> articulos = paginacion(ArticuloQueries.getInstancia().findAllByTagsSorted(tag),pagina);
             attributes.put("articulos",articulos);
 
             //paginacion
@@ -215,10 +209,10 @@ public class Main {
 
             String busqueda = request.queryParams("busqueda");
             if(busqueda != null) {
-                Etiqueta etiq = EtiquetaQueries.getInstancia().find(busqueda);
-                if(etiq != null){
+                List<Etiqueta> etiq = EtiquetaQueries.getInstancia().findAll();
+                if(etiq != null && etiq.size()>0){
                     //TODO:arreglar etiquetas de articulos: estan vacias y si se busca se va a log in
-                    response.redirect("/tags/"+etiq.getEtiqueta()+"/page/1");
+                    response.redirect("/tags/"+busqueda+"/page/1");
 
                 }
                 else attributes.put("EtiqNotFound","Etiqueta no encontrada.");
@@ -236,12 +230,17 @@ public class Main {
                 ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
                 for (String eti : etiquetas.split(",")) {
                     etiq.add(new Etiqueta(eti));
-                    EtiquetaQueries.getInstancia().crear(new Etiqueta(eti));
+                    // EtiquetaQueries.getInstancia().crear(new Etiqueta(eti));
                 }
                 Usuario user =sesion.attribute("currentUser");
                 Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), new ArrayList<Comentario>(), etiq,new ArrayList<LikeA>());
+
                 ArticuloQueries.getInstancia().crear(art);
-               // ArticuloQueries.getInstancia().crearEsp(art.getId(),etiq);
+                // ArticuloQueries.getInstancia().crearEsp(art.getId(),etiq);
+                for (String eti : etiquetas.split(",")) {
+
+                    EtiquetaQueries.getInstancia().crear(new Etiqueta(eti, (Articulo) ArticuloQueries.getInstancia().find(art.getId())));
+                }
 
             }
             else {
@@ -251,7 +250,7 @@ public class Main {
                     ArticuloQueries.getInstancia().eliminar(elim);
 
                     //System.out.println(elim);
-                //    bd.eliminarArticulo(elim);
+                    //    bd.eliminarArticulo(elim);
                 }
             }
 
@@ -334,13 +333,20 @@ public class Main {
             Long id = Long.valueOf(request.queryParams("idArticulo"));
 
             if(editarArt.equals("nonull")) {
+                Articulo ArticuloEditar = ArticuloQueries.getInstancia().find(id);
+                List<Etiqueta> repetidas = ArticuloEditar.getListaEtiqueta();
+                flushEtiq(repetidas);
                 String titulo = request.queryParams("titulo");
                 String texto = request.queryParams("area-articulo");
                 String etiquetas = request.queryParams("area-etiqueta");
                 //int idArt = Integer.parseInt(request.queryParams("idArt"));
-                ArrayList<Etiqueta> etiq = new ArrayList<Etiqueta>();
+                ArrayList<Etiqueta> etiq = new ArrayList<>();
                 for (String eti : etiquetas.split(",")) {
+                    if(eti.equals(" ")) {
+                        continue;
+                    }
                     etiq.add(new Etiqueta(eti));
+                    EtiquetaQueries.getInstancia().crear(new Etiqueta(eti, (Articulo) ArticuloQueries.getInstancia().find(id)));
                 }
                 Articulo art = new Articulo( titulo, texto, sesion.attribute("currentUser"), new ArrayList<Comentario>(), etiq, new ArrayList<LikeA>());
                 art.setId(id);
@@ -351,15 +357,15 @@ public class Main {
             else{
                 if(elimC!=null) {
                     int idC =Integer.valueOf(request.queryParams("eliminarComentarioV"));
-                   // ArticuloQueries.getInstancia().unlinkComent(id,idC);
+                    // ArticuloQueries.getInstancia().unlinkComent(id,idC);
                     ComentarioQueries.getInstancia().eliminar(idC);
                 }
                 else {
                     if (comen != null || !comen.equals("")) {
                         Comentario com = new Comentario(comen, ((Usuario)sesion.attribute("currentUser")), ((Articulo)ArticuloQueries.getInstancia().find(id)), new ArrayList<LikeC>());
-                      //  Articulo articulo = ArticuloQueries.getInstancia().find(id);
-                       // articulo.getListaComentario().add(com);
-                      //  ArticuloQueries.getInstancia().editar(articulo);
+                        //  Articulo articulo = ArticuloQueries.getInstancia().find(id);
+                        // articulo.getListaComentario().add(com);
+                        //  ArticuloQueries.getInstancia().editar(articulo);
                         ComentarioQueries.getInstancia().crear(com);
                     }
                 }
@@ -379,15 +385,15 @@ public class Main {
             int idLike = (art.getTHeLike((Usuario)sesion.attribute("currentUser")));
 
             if(idLike!=-1){
-             ArticuloQueries.getInstancia().unlinkLike(art.getId(),idLike);
+                ArticuloQueries.getInstancia().unlinkLike(art.getId(),idLike);
 
             }
 
             if("likeA".equals(mode)) {
                 LikeA like = new LikeA(true,art,(Usuario)sesion.attribute("currentUser"));
                 art.getLikes().add(like);
-               // ArticuloQueries.getInstancia().editar(art);
-               // art.addLikeA(like);
+                // ArticuloQueries.getInstancia().editar(art);
+                // art.addLikeA(like);
                 LikeAQueries.getInstancia().crear(like);
                 //like.setArticulo(art);
 
@@ -420,13 +426,13 @@ public class Main {
             if("likeC".equals(mode)) {
                 LikeC like = new LikeC(true,comentario,(Usuario)sesion.attribute("currentUser"));
                 LikeCQueries.getInstancia().crear(like);
-               // comentario.addLikeC(like);
+                // comentario.addLikeC(like);
 
             }
             else  if("dislikeC".equals(mode)) {
                 LikeC like = new LikeC(false,comentario,(Usuario)sesion.attribute("currentUser"));
                 LikeCQueries.getInstancia().crear(like);
-               // comentario.addLikeC(like);
+                // comentario.addLikeC(like);
             }
 
             response.redirect("/articulos?id="+art.getId());
@@ -517,8 +523,8 @@ public class Main {
             if(pagina<1)
                 response.redirect("/");
             else
-                if(pagina> max)
-                    response.redirect("/page/"+max);
+            if(pagina> max)
+                response.redirect("/page/"+max);
         });
         get("/clear", (request, response) -> {
             request.session().removeAttribute("sesion");
@@ -543,7 +549,13 @@ public class Main {
 
     public static double getCantPag(int size)
     {
-        return java.lang.Math.ceil(  ((double)size)/ 5 );
+        return Math.ceil(  ((double)size)/ 5 );
+    }
+
+    public static void flushEtiq(List<Etiqueta> le) {
+        for(Etiqueta e : le) {
+            EtiquetaQueries.getInstancia().eliminar(e.getId());
+        }
     }
 
 }

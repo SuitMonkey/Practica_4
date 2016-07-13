@@ -4,6 +4,7 @@ import modulo.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,10 +65,21 @@ public class ArticuloQueries extends GestionDB<Articulo> {
         return lista;
     }
 
-    public List<Articulo> findAllByTagsSorted(Etiqueta tag){
-        EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Articulo.findAllByTagsSorted");
-        List<Articulo> la = query.setParameter("tag", tag).getResultList();
+    public List<Articulo> findAllByTagsSorted(String tag){
+        List<Articulo> la = new ArrayList<>();
+        List<Articulo> dummy = ArticuloQueries.getInstancia().findAll();
+
+        for(Articulo a : dummy) {
+
+            for(Etiqueta e : a.getListaEtiqueta())
+            {
+                if(e.getEtiqueta().equals(tag))
+                {
+                    la.add(a);
+                    break;
+                }
+            }
+        }
         return la;
     }
 

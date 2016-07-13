@@ -168,7 +168,7 @@
         </form>
         </div>
         <!-- Fin busqueda -->
-    <hr>
+        <hr>
 
     <!-- Footer -->
     <footer>

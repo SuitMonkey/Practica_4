@@ -46,7 +46,7 @@ public class Articulo implements Serializable{
         this.autor = autor;
         //this.fecha = fecha;
         this.listaComentario = listaComentario;
-        this.listaEtiqueta = new ArrayList<>();
+        this.listaEtiqueta = listaEtiqueta;
 
         this.likes = likes;
 
@@ -143,17 +143,6 @@ public class Articulo implements Serializable{
                 sum++;
         }
         return sum;
-    }
-    public boolean hasLikeFrom(Usuario usuario)
-    {
-        for (LikeA la : likes)
-        {
-            if( la.getUsuario().getUsername().equals(usuario.getUsername()) &&la.getIsLike())
-            {
-                return true;
-            }
-        }
-        return false;
     }
     public int getTHeLike(Usuario usuario)
     {
